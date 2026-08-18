@@ -205,6 +205,9 @@ app.get("/admin", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
+// Root - redirect to admin
+app.get('/', (req, res) => res.redirect('/admin'));
+
 // Health check
 app.get("/health", (req, res) => res.json({ status: "ok", ts: new Date().toISOString() }));
 
