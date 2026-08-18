@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Szaby License Admin</title>
+<style>
+  :root {
+    --bg: #0f0f13;
+    --surface: #1a1a24;
+    --surface2: #22222e;
+    --accent: #7c5cbf;
+    --accent2: #a87de8;
+    --green: #3ecf8e;
+    --red: #f94141;
+    --yellow: #f5a623;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --border: #2e2e40;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 18px 32px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--accent2), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .badge { background: var(--accent); color: #fff; font-size: .7rem; padding: 2px 10px; border-radius: 20px; font-weight: 600; }
+  .login-wall { display: flex; align-items: center; justify-content: center; height: 80vh; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
+  .login-wall .card { min-width: 340px; }
+  .login-wall h2 { margin-bottom: 20px; font-size: 1.1rem; }
+  input, select { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 10px 14px; width: 100%; font-size: .95rem; margin-bottom: 12px; outline: none; }
+  input:focus, select:focus { border-color: var(--accent); }
+  button { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; cursor: pointer; font-size: .95rem; font-weight: 600; transition: background .2s; }
+  button:hover { background: var(--accent2); }
+  button.danger { background: var(--red); }
+  button.danger:hover { background: #c73131; }
+  button.small { padding: 5px 12px; font-size: .8rem; }
+  .main { display: none; padding: 28px 32px; max-width: 1200px; margin: 0 auto; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+  .tab { padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; color: var(--muted); background: var(--surface); border: 1px solid var(--border); transition: all .2s; }
+  .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .section { display: none; }
+  .section.active { display: block; }
+  .gen-form { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 28px; }
+  .gen-form label { font-size: .82rem; color: var(--muted); margin-bottom: 4px; display: block; }
+  .gen-form .field { display: flex; flex-direction: column; }
+  .gen-form input, .gen-form select { margin-bottom: 0; width: auto; }
+  .key-result { background: var(--surface2); border: 1px solid var(--accent); border-radius: 10px; padding: 16px 20px; font-family: monospace; font-size: 1.1rem; letter-spacing: 2px; color: var(--accent2); display: none; margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  th { text-align: left; padding: 10px 14px; color: var(--muted); border-bottom: 1px solid var(--border); font-weight: 600; font-size: .8rem; text-transform: uppercase; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  tr:hover td { background: var(--surface2); }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: .75rem; font-weight: 700; }
+  .pill.valid { background: rgba(62,207,142,.15); color: var(--green); }
+  .pill.expired { background: rgba(245,166,35,.15); color: var(--yellow); }
+  .pill.banned { background: rgba(249,65,65,.15); color: var(--red); }
+  .pill.inactive { background: rgba(136,136,153,.15); color: var(--muted); }
+  .stat-row { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 28px; flex: 1; min-width: 150px; }
+  .stat .val { font-size: 2rem; font-weight: 800; }
+  .stat .lbl { color: var(--muted); font-size: .8rem; margin-top: 4px; }
+  .ban-form { display: flex; gap: 10px; margin-bottom: 20px; }
+  .ban-form input { flex: 1; margin-bottom: 0; }
+  #toast { position: fixed; bottom: 28px; right: 28px; background: var(--green); color: #000; padding: 12px 22px; border-radius: 10px; font-weight: 700; display: none; z-index: 999; }
+</style>
+</head>
+<body>
+<header>
+  <h1>? Szaby License Admin</h1>
+  <span class="badge">ADMIN</span>
+  <span id="serverStatus" style="margin-left:auto;font-size:.8rem;color:var(--muted)">Connecting...</span>
+</header>
+
+<div class="login-wall" id="loginWall">
+  <div class="card">
+    <h2>?? Admin Bejelentkezés</h2>
+    <label style="font-size:.82rem;color:var(--muted);margin-bottom:4px;display:block">Admin Token</label>
+    <input type="password" id="tokenInput" placeholder="ADMIN_TOKEN">
+    <button onclick="login()" style="width:100%">Bejelentkezés</button>
+  </div>
+</div>
+
+<div class="main" id="mainPanel">
+  <div class="stat-row" id="statRow"></div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('keys')">?? Kulcsok</div>
+    <div class="tab" onclick="switchTab('banned')">?? HWID Ban</div>
+    <div class="tab" onclick="switchTab('logs')">?? Logok</div>
+  </div>
+
+  <!-- KEYS SECTION -->
+  <div class="section active" id="sec-keys">
+    <div class="gen-form">
+      <div class="field">
+        <label>Idõtartam</label>
+        <select id="dur">
+          <option value="30d">30 nap</option>
+          <option value="365d">1 év</option>
+          <option value="lifetime">Örök</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Megjegyzés (opcionális)</label>
+        <input id="lbl" placeholder="pl. Discord: user123">
+      </div>
+      <div class="field" style="justify-content:flex-end">
+        <button onclick="generateKey()">+ Kulcs Generálása</button>
+      </div>
+    </div>
+    <div class="key-result" id="keyResult"></div>
+    <table id="keysTable">
+      <thead><tr><th>Kulcs</th><th>Megjegyzés</th><th>Státusz</th><th>HWID</th><th>Aktiválva</th><th>Lejár</th><th>Mûveletek</th></tr></thead>
+      <tbody id="keysBody"></tbody>
+    </table>
+  </div>
+
+  <!-- BANNED SECTION -->
+  <div class="section" id="sec-banned">
+    <div class="ban-form">
+      <input id="banHwid" placeholder="HWID (SHA-256 hash)">
+      <input id="banReason" placeholder="Indok (opcionális)">
+      <button class="danger" onclick="banHwid()">?? Ban</button>
+    </div>
+    <table>
+      <thead><tr><th>HWID</th><th>Indok</th><th>Bannolva</th><th>Feloldás</th></tr></thead>
+      <tbody id="bannedBody"></tbody>
+    </table>
+  </div>
+
+  <!-- LOGS SECTION -->
+  <div class="section" id="sec-logs">
+    <table>
+      <thead><tr><th>Idõ</th><th>Típus</th><th>Kulcs</th><th>HWID</th><th>IP</th><th>Eredmény</th></tr></thead>
+      <tbody id="logsBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let TOKEN = "";
+
+async function api(path, opts = {}) {
+  const res = await fetch(path, { headers: { "x-admin-token": TOKEN, "Content-Type": "application/json" }, ...opts });
+  if (res.status === 403) { logout(); return null; }
+  return res.json();
+}
+
+function toast(msg, color = "#3ecf8e") {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.style.background = color; t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 2500);
+}
+
+function switchTab(name) {
+  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["keys","banned","logs"][i] === name));
+  document.querySelectorAll(".section").forEach(s => s.classList.toggle("active", s.id === "sec-" + name));
+  if (name === "banned") loadBanned();
+  if (name === "logs") loadLogs();
+}
+
+async function login() {
+  TOKEN = document.getElementById("tokenInput").value;
+  const data = await api("/admin/keys");
+  if (!data) { alert("Hibás token!"); TOKEN = ""; return; }
+  document.getElementById("loginWall").style.display = "none";
+  document.getElementById("mainPanel").style.display = "block";
+  loadKeys(); checkStatus();
+}
+
+function logout() { TOKEN = ""; document.getElementById("loginWall").style.display = "flex"; document.getElementById("mainPanel").style.display = "none"; }
+
+async function checkStatus() {
+  try {
+    const r = await fetch("/health"); const d = await r.json();
+    document.getElementById("serverStatus").textContent = "? Szerver online";
+    document.getElementById("serverStatus").style.color = "#3ecf8e";
+  } catch { document.getElementById("serverStatus").textContent = "? Offline"; document.getElementById("serverStatus").style.color = "#f94141"; }
+}
+
+async function generateKey() {
+  const dur = document.getElementById("dur").value;
+  const label = document.getElementById("lbl").value;
+  const data = await api("/admin/keys/generate", { method: "POST", body: JSON.stringify({ duration: dur, label }) });
+  if (!data) return;
+  const el = document.getElementById("keyResult");
+  el.textContent = data.key;
+  el.style.display = "block";
+  navigator.clipboard?.writeText(data.key);
+  toast("Kulcs vágólapra másolva: " + data.key);
+  loadKeys();
+}
+
+function statusPill(row) {
+  if (row.banned) return '<span class="pill banned">Bannolva</span>';
+  if (!row.activated) return '<span class="pill inactive">Nem aktív</span>';
+  if (row.expires_at !== "9999-12-31T23:59:59Z" && new Date(row.expires_at) < new Date()) return '<span class="pill expired">Lejárt</span>';
+  return '<span class="pill valid">Aktív</span>';
+}
+
+async function loadKeys() {
+  const keys = await api("/admin/keys");
+  if (!keys) return;
+  const total = keys.length, active = keys.filter(k => k.activated && !k.banned && (k.expires_at === "9999-12-31T23:59:59Z" || new Date(k.expires_at) > new Date())).length;
+  const banned = keys.filter(k => k.banned).length, inactive = keys.filter(k => !k.activated).length;
+  document.getElementById("statRow").innerHTML = `
+    <div class="stat"><div class="val">${total}</div><div class="lbl">Összes Kulcs</div></div>
+    <div class="stat"><div class="val" style="color:#3ecf8e">${active}</div><div class="lbl">Aktív</div></div>
+    <div class="stat"><div class="val" style="color:#888">${inactive}</div><div class="lbl">Nem Aktivált</div></div>
+    <div class="stat"><div class="val" style="color:#f94141">${banned}</div><div class="lbl">Bannolva</div></div>
+  `;
+  const tbody = document.getElementById("keysBody");
+  tbody.innerHTML = keys.map(k => `<tr>
+    <td><code style="font-size:.85rem;letter-spacing:1px">${k.key}</code></td>
+    <td style="color:#888">${k.label || "-"}</td>
+    <td>${statusPill(k)}</td>
+    <td style="font-family:monospace;font-size:.75rem;color:#888">${k.hwid ? k.hwid.substring(0,12)+"..." : "-"}</td>
+    <td style="color:#888;font-size:.8rem">${k.activated_at ? k.activated_at.split("T")[0] : "-"}</td>
+    <td style="font-size:.8rem">${k.expires_at === "9999-12-31T23:59:59Z" ? "? Örök" : (k.expires_at ? k.expires_at.split("T")[0] : "-")}</td>
+    <td>
+      ${!k.banned ? `<button class="small danger" onclick="revokeKey('${k.key}')">Visszavon</button>` : ""}
+      ${k.hwid && !k.banned ? `<button class="small danger" style="margin-left:6px" onclick="banHwidDirect('${k.hwid}')">HWID Ban</button>` : ""}
+    </td>
+  </tr>`).join("");
+}
+
+async function revokeKey(key) {
+  if (!confirm("Biztosan visszavonod a kulcsot?")) return;
+  await api("/admin/keys/revoke", { method: "POST", body: JSON.stringify({ key }) });
+  toast("Kulcs visszavonva!", "#f94141"); loadKeys();
+}
+
+async function banHwid() {
+  const hwid = document.getElementById("banHwid").value;
+  const reason = document.getElementById("banReason").value;
+  if (!hwid) return;
+  await api("/admin/ban", { method: "POST", body: JSON.stringify({ hwid, reason }) });
+  toast("HWID bannolva!", "#f94141"); loadBanned(); loadKeys();
+}
+
+async function banHwidDirect(hwid) {
+  if (!confirm("HWID bannolod ezt az eszközt?\n" + hwid)) return;
+  await api("/admin/ban", { method: "POST", body: JSON.stringify({ hwid, reason: "Manual admin ban" }) });
+  toast("HWID bannolva!", "#f94141"); loadKeys();
+}
+
+async function loadBanned() {
+  const list = await api("/admin/banned");
+  if (!list) return;
+  document.getElementById("bannedBody").innerHTML = list.map(b => `<tr>
+    <td><code style="font-size:.78rem">${b.hwid}</code></td>
+    <td style="color:#888">${b.reason || "-"}</td>
+    <td style="font-size:.8rem;color:#888">${b.banned_at?.split("T")[0] || "-"}</td>
+    <td><button class="small" onclick="unban('${b.hwid}')">Feloldás</button></td>
+  </tr>`).join("");
+}
+
+async function unban(hwid) {
+  await api("/admin/unban", { method: "POST", body: JSON.stringify({ hwid }) });
+  toast("Ban feloldva!"); loadBanned();
+}
+
+async function loadLogs() {
+  const logs = await api("/admin/logs");
+  if (!logs) return;
+  const colors = { VALID: "#3ecf8e", ACTIVATED: "#7c5cbf", INVALID: "#f5a623", EXPIRED: "#f5a623", BANNED: "#f94141", AUTO_BANNED: "#f94141", HWID_MISMATCH: "#f94141" };
+  document.getElementById("logsBody").innerHTML = logs.map(l => `<tr>
+    <td style="font-size:.78rem;color:#888">${l.ts?.split("T").join(" ").split(".")[0]}</td>
+    <td style="font-size:.78rem">${l.type}</td>
+    <td><code style="font-size:.78rem">${l.key || "-"}</code></td>
+    <td style="font-family:monospace;font-size:.72rem;color:#888">${l.hwid ? l.hwid.substring(0,10)+"..." : "-"}</td>
+    <td style="font-size:.78rem;color:#888">${l.ip || "-"}</td>
+    <td><span style="color:${colors[l.result]||"#888"};font-weight:700;font-size:.78rem">${l.result}</span></td>
+  </tr>`).join("");
+}
+</script>
+</body>
+</html>

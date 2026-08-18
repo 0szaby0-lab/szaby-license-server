@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: szaby-license-server
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: DB_PATH
+        value: /var/data/szaby_licenses.db
+    disk:
+      name: szaby-db
+      mountPath: /var/data
+      sizeGB: 1
+
