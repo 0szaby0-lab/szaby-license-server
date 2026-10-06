@@ -1,287 +1,1402 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Szaby License Admin</title>
-<style>
-  :root {
-    --bg: #0f0f13;
-    --surface: #1a1a24;
-    --surface2: #22222e;
-    --accent: #7c5cbf;
-    --accent2: #a87de8;
-    --green: #3ecf8e;
-    --red: #f94141;
-    --yellow: #f5a623;
-    --text: #e8e8f0;
-    --muted: #888899;
-    --border: #2e2e40;
-    --radius: 12px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
-  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 18px 32px; display: flex; align-items: center; gap: 16px; }
-  header h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--accent2), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .badge { background: var(--accent); color: #fff; font-size: .7rem; padding: 2px 10px; border-radius: 20px; font-weight: 600; }
-  .login-wall { display: flex; align-items: center; justify-content: center; height: 80vh; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; }
-  .login-wall .card { min-width: 340px; }
-  .login-wall h2 { margin-bottom: 20px; font-size: 1.1rem; }
-  input, select { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 10px 14px; width: 100%; font-size: .95rem; margin-bottom: 12px; outline: none; }
-  input:focus, select:focus { border-color: var(--accent); }
-  button { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; cursor: pointer; font-size: .95rem; font-weight: 600; transition: background .2s; }
-  button:hover { background: var(--accent2); }
-  button.danger { background: var(--red); }
-  button.danger:hover { background: #c73131; }
-  button.small { padding: 5px 12px; font-size: .8rem; }
-  .main { display: none; padding: 28px 32px; max-width: 1200px; margin: 0 auto; }
-  .tabs { display: flex; gap: 8px; margin-bottom: 24px; }
-  .tab { padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; color: var(--muted); background: var(--surface); border: 1px solid var(--border); transition: all .2s; }
-  .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .section { display: none; }
-  .section.active { display: block; }
-  .gen-form { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 28px; }
-  .gen-form label { font-size: .82rem; color: var(--muted); margin-bottom: 4px; display: block; }
-  .gen-form .field { display: flex; flex-direction: column; }
-  .gen-form input, .gen-form select { margin-bottom: 0; width: auto; }
-  .key-result { background: var(--surface2); border: 1px solid var(--accent); border-radius: 10px; padding: 16px 20px; font-family: monospace; font-size: 1.1rem; letter-spacing: 2px; color: var(--accent2); display: none; margin-bottom: 20px; }
-  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
-  th { text-align: left; padding: 10px 14px; color: var(--muted); border-bottom: 1px solid var(--border); font-weight: 600; font-size: .8rem; text-transform: uppercase; }
-  td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
-  tr:hover td { background: var(--surface2); }
-  .pill { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: .75rem; font-weight: 700; }
-  .pill.valid { background: rgba(62,207,142,.15); color: var(--green); }
-  .pill.expired { background: rgba(245,166,35,.15); color: var(--yellow); }
-  .pill.banned { background: rgba(249,65,65,.15); color: var(--red); }
-  .pill.inactive { background: rgba(136,136,153,.15); color: var(--muted); }
-  .stat-row { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
-  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 28px; flex: 1; min-width: 150px; }
-  .stat .val { font-size: 2rem; font-weight: 800; }
-  .stat .lbl { color: var(--muted); font-size: .8rem; margin-top: 4px; }
-  .ban-form { display: flex; gap: 10px; margin-bottom: 20px; }
-  .ban-form input { flex: 1; margin-bottom: 0; }
-  #toast { position: fixed; bottom: 28px; right: 28px; background: var(--green); color: #000; padding: 12px 22px; border-radius: 10px; font-weight: 700; display: none; z-index: 999; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Szaby Licenc Kezelőpult</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090a0f;
+      --bg-card: rgba(18, 20, 29, 0.75);
+      --bg-card-hover: rgba(26, 29, 43, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: #8b5cf6;
+      --accent: #8b5cf6;
+      --accent-glow: rgba(139, 92, 246, 0.35);
+      --accent-light: #a78bfa;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --green-glow: rgba(16, 185, 129, 0.2);
+      --red: #ef4444;
+      --red-glow: rgba(239, 68, 68, 0.2);
+      --yellow: #f59e0b;
+      --blue: #3b82f6;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header {
+      background: rgba(13, 15, 22, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--accent), var(--cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px var(--accent-glow);
+    }
+
+    .brand-icon svg {
+      width: 22px;
+      height: 22px;
+      color: white;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .server-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--yellow);
+      transition: background 0.3s;
+    }
+
+    .status-dot.online {
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+    }
+
+    .status-dot.offline {
+      background: var(--red);
+      box-shadow: 0 0 10px var(--red);
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1240px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 32px 24px;
+      flex: 1;
+    }
+
+    /* Login Modal */
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(80vh - 80px);
+    }
+
+    .login-box {
+      background: var(--bg-card);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .login-box .icon-wrap {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-light);
+    }
+
+    .login-box h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .login-box p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-bottom: 28px;
+    }
+
+    /* Forms */
+    .form-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input, select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.92rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.07);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    select option {
+      background: #141722;
+      color: var(--text);
+    }
+
+    /* Buttons */
+    .btn {
+      background: linear-gradient(135deg, var(--accent), #7038db);
+      color: white;
+      border: none;
+      padding: 12px 22px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px var(--accent-glow);
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--accent-glow);
+      filter: brightness(1.1);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn.btn-block {
+      width: 100%;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--red);
+      box-shadow: none;
+    }
+
+    .btn-danger:hover {
+      background: var(--red);
+      color: white;
+      box-shadow: 0 4px 14px var(--red-glow);
+    }
+
+    .btn-blue {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: var(--blue);
+      box-shadow: none;
+    }
+
+    .btn-blue:hover {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .stat-card:hover {
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+
+    .stat-card .glow {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .stat-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-val {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    /* Navigation Tabs */
+    .tabs-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 12px 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      color: var(--accent-light);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Generator Card */
+    .card-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .panel-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .generator-grid {
+      display: grid;
+      grid-template-columns: 200px 1fr auto;
+      gap: 16px;
+      align-items: flex-end;
+    }
+
+    @media (max-width: 768px) {
+      .generator-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .generated-key-banner {
+      display: none;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-top: 20px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .key-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent-light);
+      letter-spacing: 1.5px;
+    }
+
+    /* Search & Filter Toolbar */
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      max-width: 360px;
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+    }
+
+    .search-box input {
+      padding-left: 40px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      font-size: 0.86rem;
+    }
+
+    /* Table Container */
+    .table-responsive {
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th {
+      padding: 14px 18px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      color: #cbd5e1;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .key-cell {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-copy-inline {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 3px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .btn-copy-inline:hover {
+      color: var(--accent-light);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .hwid-cell {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Status Pills */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .pill-active {
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+    .pill-active .pill-dot { background: #10b981; }
+
+    .pill-inactive {
+      background: rgba(148, 163, 184, 0.12);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    .pill-inactive .pill-dot { background: #94a3b8; }
+
+    .pill-expired {
+      background: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+    .pill-expired .pill-dot { background: #f59e0b; }
+
+    .pill-banned {
+      background: rgba(239, 68, 68, 0.12);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+    .pill-banned .pill-dot { background: #ef4444; }
+
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    /* Empty state */
+    .empty-state {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .empty-state svg {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    #toast.success { border-color: rgba(16, 185, 129, 0.4); }
+    #toast.error { border-color: rgba(239, 68, 68, 0.4); }
+    #toast.info { border-color: rgba(59, 130, 246, 0.4); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hidden { display: none !important; }
+  </style>
 </head>
 <body>
-<header>
-  <h1>? Szaby License Admin</h1>
-  <span class="badge">ADMIN</span>
-  <span id="serverStatus" style="margin-left:auto;font-size:.8rem;color:var(--muted)">Connecting...</span>
-</header>
 
-<div class="login-wall" id="loginWall">
-  <div class="card">
-    <h2>?? Admin Bejelentkezés</h2>
-    <label style="font-size:.82rem;color:var(--muted);margin-bottom:4px;display:block">Admin Token</label>
-    <input type="password" id="tokenInput" placeholder="ADMIN_TOKEN">
-    <button onclick="login()" style="width:100%">Bejelentkezés</button>
-  </div>
-</div>
-
-<div class="main" id="mainPanel">
-  <div class="stat-row" id="statRow"></div>
-
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab('keys')">?? Kulcsok</div>
-    <div class="tab" onclick="switchTab('banned')">?? HWID Ban</div>
-    <div class="tab" onclick="switchTab('logs')">?? Logok</div>
-  </div>
-
-  <!-- KEYS SECTION -->
-  <div class="section active" id="sec-keys">
-    <div class="gen-form">
-      <div class="field">
-        <label>Idõtartam</label>
-        <select id="dur">
-          <option value="30d">30 nap</option>
-          <option value="365d">1 év</option>
-          <option value="lifetime">Örök</option>
-        </select>
+  <!-- Header -->
+  <header>
+    <a href="#" class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m21 2-2 2m-6 6 7 7-3 3-7-7-3 3-4-4 3-3-7-7 3-3 7 7 3-3Z"/>
+        </svg>
       </div>
-      <div class="field">
-        <label>Megjegyzés (opcionális)</label>
-        <input id="lbl" placeholder="pl. Discord: user123">
+      <div>
+        <div class="brand-title">Szaby Licenc Rendszer</div>
       </div>
-      <div class="field" style="justify-content:flex-end">
-        <button onclick="generateKey()">+ Kulcs Generálása</button>
+    </a>
+
+    <div class="header-actions">
+      <div class="server-status">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="serverStatusText">Kapcsolódás...</span>
+      </div>
+      <button class="btn-logout hidden" id="logoutBtn" onclick="logout()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Kijelentkezés
+      </button>
+    </div>
+  </header>
+
+  <!-- Login Wall -->
+  <div class="container login-container" id="loginWall">
+    <div class="login-box">
+      <div class="icon-wrap">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <h2>Adminisztrátori Belépés</h2>
+      <p>Kérlek add meg a titkos adminisztrátori tokent a folytatáshoz.</p>
+      
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="tokenInput">Admin Token</label>
+          <input type="password" id="tokenInput" placeholder="Add meg a tokent..." required autofocus>
+        </div>
+        <button type="submit" class="btn btn-block">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Belépés a Vezérlőpultra
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Dashboard -->
+  <div class="container hidden" id="mainPanel">
+    
+    <!-- Statisztikák -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="glow" style="background: var(--accent);"></div>
+        <div class="stat-header">
+          <span class="stat-title">Összes Licenc</span>
+          <div class="stat-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-light);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-6 6l7 7-3 3-7-7-3 3-4-4 3-3-7-7 3-3 7 7 3-3z"/></svg>
+          </div>
+        </div>
+        <div class="stat-val" id="statTotal">-</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="glow" style="background: var(--green);"></div>
+        <div class="stat-header">
+          <span class="stat-title">Aktív Előfizetések</span>
+          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--green);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+        </div>
+        <div class="stat-val" id="statActive" style="color: var(--green);">-</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="glow" style="background: var(--yellow);"></div>
+        <div class="stat-header">
+          <span class="stat-title">Nem Aktivált</span>
+          <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--yellow);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+        </div>
+        <div class="stat-val" id="statInactive" style="color: var(--text-muted);">-</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="glow" style="background: var(--red);"></div>
+        <div class="stat-header">
+          <span class="stat-title">Letiltott / Visszavont</span>
+          <div class="stat-icon" style="background: rgba(239, 68, 68, 0.15); color: var(--red);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          </div>
+        </div>
+        <div class="stat-val" id="statBanned" style="color: var(--red);">-</div>
       </div>
     </div>
-    <div class="key-result" id="keyResult"></div>
-    <table id="keysTable">
-      <thead><tr><th>Kulcs</th><th>Megjegyzés</th><th>Státusz</th><th>HWID</th><th>Aktiválva</th><th>Lejár</th><th>Mûveletek</th></tr></thead>
-      <tbody id="keysBody"></tbody>
-    </table>
-  </div>
 
-  <!-- BANNED SECTION -->
-  <div class="section" id="sec-banned">
-    <div class="ban-form">
-      <input id="banHwid" placeholder="HWID (SHA-256 hash)">
-      <input id="banReason" placeholder="Indok (opcionális)">
-      <button class="danger" onclick="banHwid()">?? Ban</button>
+    <!-- Fülek -->
+    <div class="tabs-wrapper">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('keys')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-6 6l7 7-3 3-7-7-3 3-4-4 3-3-7-7 3-3 7 7 3-3z"/></svg>
+          Licenc Kulcsok
+        </button>
+        <button class="tab-btn" onclick="switchTab('banned')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          HWID Tiltólista
+        </button>
+        <button class="tab-btn" onclick="switchTab('logs')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Rendszer Napló
+        </button>
+      </div>
+
+      <button class="btn btn-secondary btn-sm" onclick="refreshCurrentTab()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Frissítés
+      </button>
     </div>
-    <table>
-      <thead><tr><th>HWID</th><th>Indok</th><th>Bannolva</th><th>Feloldás</th></tr></thead>
-      <tbody id="bannedBody"></tbody>
-    </table>
+
+    <!-- 1. KULCSOK SZEKCIÓ -->
+    <div id="sec-keys">
+      <!-- Generátor Kártya -->
+      <div class="card-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Új Licenc Generálása
+          </div>
+        </div>
+
+        <div class="generator-grid">
+          <div class="form-group" style="margin-bottom:0">
+            <label for="dur">Érvényességi Idő</label>
+            <select id="dur">
+              <option value="30d">30 napos hozzáférés</option>
+              <option value="365d">1 éves előfizetés</option>
+              <option value="lifetime">Örökös licenc (Lifetime)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0">
+            <label for="lbl">Vásárló azonosító / Megjegyzés</label>
+            <input id="lbl" placeholder="pl. Discord: user#1234 vagy rendelési szám">
+          </div>
+
+          <button class="btn" onclick="generateKey()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Kulcs Generálása
+          </button>
+        </div>
+
+        <div class="generated-key-banner" id="keyBanner">
+          <div>
+            <div style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Legutóbb generált kulcs:</div>
+            <div class="key-display" id="generatedKeyText">SZABY-XXXX-XXXX-XXXX</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="copyGeneratedKey()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Másolás
+          </button>
+        </div>
+      </div>
+
+      <!-- Táblázat Toolbar -->
+      <div class="table-toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="keySearchInput" placeholder="Keresés kulcs, vásárló vagy HWID alapján..." oninput="filterKeys()">
+        </div>
+
+        <div style="font-size:0.84rem;color:var(--text-muted)" id="keysCount">
+          Betöltés...
+        </div>
+      </div>
+
+      <!-- Táblázat -->
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Licenc Kulcs</th>
+              <th>Vásárló / Megjegyzés</th>
+              <th>Állapot</th>
+              <th>Eszköz HWID</th>
+              <th>Aktiválás Dátuma</th>
+              <th>Lejárat</th>
+              <th>Műveletek</th>
+            </tr>
+          </thead>
+          <tbody id="keysBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 2. TILTÓLISTA SZEKCIÓ -->
+    <div id="sec-banned" class="hidden">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            Készülék Manuális Letiltása
+          </div>
+        </div>
+
+        <div class="generator-grid">
+          <div class="form-group" style="margin-bottom:0">
+            <label for="banHwidInput">Eszköz HWID</label>
+            <input id="banHwidInput" placeholder="SHA-256 lenyomat">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label for="banReasonInput">Tiltás Indoka</label>
+            <input id="banReasonInput" placeholder="pl. Jogosulatlan visszaélés, csalás">
+          </div>
+          <button class="btn btn-danger" onclick="banHwidManual()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            Eszköz Tiltása
+          </button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Letiltott HWID</th>
+              <th>Indoklás</th>
+              <th>Tiltás Ideje</th>
+              <th>Művelet</th>
+            </tr>
+          </thead>
+          <tbody id="bannedBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 3. NAPLÓ SZEKCIÓ -->
+    <div id="sec-logs" class="hidden">
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Időbélyeg</th>
+              <th>Esemény Típusa</th>
+              <th>Licenc Kulcs</th>
+              <th>Eszköz HWID</th>
+              <th>IP Cím</th>
+              <th>Eredmény</th>
+            </tr>
+          </thead>
+          <tbody id="logsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
-  <!-- LOGS SECTION -->
-  <div class="section" id="sec-logs">
-    <table>
-      <thead><tr><th>Idõ</th><th>Típus</th><th>Kulcs</th><th>HWID</th><th>IP</th><th>Eredmény</th></tr></thead>
-      <tbody id="logsBody"></tbody>
-    </table>
+  <!-- Toast Értesítés -->
+  <div id="toast">
+    <span id="toastIcon"></span>
+    <span id="toastMsg"></span>
   </div>
-</div>
 
-<div id="toast"></div>
+  <script>
+    let TOKEN = "";
+    let allKeys = [];
+    let currentTab = "keys";
 
-<script>
-let TOKEN = "";
+    // Auto-login from localStorage
+    window.addEventListener("DOMContentLoaded", () => {
+      checkServerHealth();
+      setInterval(checkServerHealth, 30000);
 
-async function api(path, opts = {}) {
-  const res = await fetch(path, { headers: { "x-admin-token": TOKEN, "Content-Type": "application/json" }, ...opts });
-  if (res.status === 403) { logout(); return null; }
-  return res.json();
-}
+      const savedToken = localStorage.getItem("szaby_admin_token");
+      if (savedToken) {
+        TOKEN = savedToken;
+        verifyAndOpen();
+      }
+    });
 
-function toast(msg, color = "#3ecf8e") {
-  const t = document.getElementById("toast");
-  t.textContent = msg; t.style.background = color; t.style.display = "block";
-  setTimeout(() => t.style.display = "none", 2500);
-}
+    async function checkServerHealth() {
+      const dot = document.getElementById("statusDot");
+      const text = document.getElementById("serverStatusText");
+      try {
+        const res = await fetch("/health");
+        if (res.ok) {
+          dot.className = "status-dot online";
+          text.textContent = "Szerver Online (Render)";
+        } else {
+          dot.className = "status-dot offline";
+          text.textContent = "Szerver Hiba";
+        }
+      } catch (err) {
+        dot.className = "status-dot offline";
+        text.textContent = "Kapcsolódási hiba";
+      }
+    }
 
-function switchTab(name) {
-  document.querySelectorAll(".tab").forEach((t, i) => t.classList.toggle("active", ["keys","banned","logs"][i] === name));
-  document.querySelectorAll(".section").forEach(s => s.classList.toggle("active", s.id === "sec-" + name));
-  if (name === "banned") loadBanned();
-  if (name === "logs") loadLogs();
-}
+    async function api(path, opts = {}) {
+      try {
+        const res = await fetch(path, {
+          headers: {
+            "x-admin-token": TOKEN,
+            "Content-Type": "application/json"
+          },
+          ...opts
+        });
 
-async function login() {
-  TOKEN = document.getElementById("tokenInput").value;
-  const data = await api("/admin/keys");
-  if (!data) { alert("Hibás token!"); TOKEN = ""; return; }
-  document.getElementById("loginWall").style.display = "none";
-  document.getElementById("mainPanel").style.display = "block";
-  loadKeys(); checkStatus();
-}
+        if (res.status === 403) {
+          showToast("A munkamenet lejárt vagy érvénytelen a token!", "error");
+          logout();
+          return null;
+        }
 
-function logout() { TOKEN = ""; document.getElementById("loginWall").style.display = "flex"; document.getElementById("mainPanel").style.display = "none"; }
+        return await res.json();
+      } catch (err) {
+        showToast("Hálózati hiba történt a kérés közben!", "error");
+        return null;
+      }
+    }
 
-async function checkStatus() {
-  try {
-    const r = await fetch("/health"); const d = await r.json();
-    document.getElementById("serverStatus").textContent = "? Szerver online";
-    document.getElementById("serverStatus").style.color = "#3ecf8e";
-  } catch { document.getElementById("serverStatus").textContent = "? Offline"; document.getElementById("serverStatus").style.color = "#f94141"; }
-}
+    async function handleLogin(e) {
+      e.preventDefault();
+      const tokenVal = document.getElementById("tokenInput").value.trim();
+      if (!tokenVal) return;
 
-async function generateKey() {
-  const dur = document.getElementById("dur").value;
-  const label = document.getElementById("lbl").value;
-  const data = await api("/admin/keys/generate", { method: "POST", body: JSON.stringify({ duration: dur, label }) });
-  if (!data) return;
-  const el = document.getElementById("keyResult");
-  el.textContent = data.key;
-  el.style.display = "block";
-  navigator.clipboard?.writeText(data.key);
-  toast("Kulcs vágólapra másolva: " + data.key);
-  loadKeys();
-}
+      TOKEN = tokenVal;
+      await verifyAndOpen();
+    }
 
-function statusPill(row) {
-  if (row.banned) return '<span class="pill banned">Bannolva</span>';
-  if (!row.activated) return '<span class="pill inactive">Nem aktív</span>';
-  if (row.expires_at !== "9999-12-31T23:59:59Z" && new Date(row.expires_at) < new Date()) return '<span class="pill expired">Lejárt</span>';
-  return '<span class="pill valid">Aktív</span>';
-}
+    async function verifyAndOpen() {
+      const data = await api("/admin/keys");
+      if (!data) {
+        TOKEN = "";
+        localStorage.removeItem("szaby_admin_token");
+        return;
+      }
 
-async function loadKeys() {
-  const keys = await api("/admin/keys");
-  if (!keys) return;
-  const total = keys.length, active = keys.filter(k => k.activated && !k.banned && (k.expires_at === "9999-12-31T23:59:59Z" || new Date(k.expires_at) > new Date())).length;
-  const banned = keys.filter(k => k.banned).length, inactive = keys.filter(k => !k.activated).length;
-  document.getElementById("statRow").innerHTML = `
-    <div class="stat"><div class="val">${total}</div><div class="lbl">Összes Kulcs</div></div>
-    <div class="stat"><div class="val" style="color:#3ecf8e">${active}</div><div class="lbl">Aktív</div></div>
-    <div class="stat"><div class="val" style="color:#888">${inactive}</div><div class="lbl">Nem Aktivált</div></div>
-    <div class="stat"><div class="val" style="color:#f94141">${banned}</div><div class="lbl">Bannolva</div></div>
-  `;
-  const tbody = document.getElementById("keysBody");
-  tbody.innerHTML = keys.map(k => `<tr>
-    <td><code style="font-size:.85rem;letter-spacing:1px">${k.key}</code></td>
-    <td style="color:#888">${k.label || "-"}</td>
-    <td>${statusPill(k)}</td>
-    <td style="font-family:monospace;font-size:.75rem;color:#888">${k.hwid ? k.hwid.substring(0,12)+"..." : "-"}</td>
-    <td style="color:#888;font-size:.8rem">${k.activated_at ? k.activated_at.split("T")[0] : "-"}</td>
-    <td style="font-size:.8rem">${k.expires_at === "9999-12-31T23:59:59Z" ? "? Örök" : (k.expires_at ? k.expires_at.split("T")[0] : "-")}</td>
-    <td>
-      ${!k.banned ? `<button class="small danger" onclick="revokeKey('${k.key}')">Visszavon</button>` : ""}
-      ${k.hwid && !k.banned ? `<button class="small danger" style="margin-left:6px" onclick="banHwidDirect('${k.hwid}')">HWID Ban</button>` : ""}
-      ${k.activated && !k.banned ? `<button class="small" style="margin-left:6px;background:#3b82f6" onclick="resetKey('${k.key}')">HWID Reset</button>` : ""}
-    </td>
-  </tr>`).join("");
-}
+      localStorage.setItem("szaby_admin_token", TOKEN);
+      document.getElementById("loginWall").classList.add("hidden");
+      document.getElementById("mainPanel").classList.remove("hidden");
+      document.getElementById("logoutBtn").classList.remove("hidden");
 
-async function resetKey(key) {
-  if (!confirm("Biztosan feloldod a kulcshoz kötött eszközt (HWID)?\n" + key)) return;
-  await api("/admin/keys/reset", { method: "POST", body: JSON.stringify({ key }) });
-  toast("HWID feloldva!", "#3b82f6"); loadKeys();
-}
+      renderKeys(data);
+      switchTab("keys");
+      showToast("Sikeres bejelentkezés!", "success");
+    }
 
-async function revokeKey(key) {
-  if (!confirm("Biztosan visszavonod a kulcsot?")) return;
-  await api("/admin/keys/revoke", { method: "POST", body: JSON.stringify({ key }) });
-  toast("Kulcs visszavonva!", "#f94141"); loadKeys();
-}
+    function logout() {
+      TOKEN = "";
+      localStorage.removeItem("szaby_admin_token");
+      document.getElementById("tokenInput").value = "";
+      document.getElementById("loginWall").classList.remove("hidden");
+      document.getElementById("mainPanel").classList.add("hidden");
+      document.getElementById("logoutBtn").classList.add("hidden");
+    }
 
-async function banHwid() {
-  const hwid = document.getElementById("banHwid").value;
-  const reason = document.getElementById("banReason").value;
-  if (!hwid) return;
-  await api("/admin/ban", { method: "POST", body: JSON.stringify({ hwid, reason }) });
-  toast("HWID bannolva!", "#f94141"); loadBanned(); loadKeys();
-}
+    function switchTab(name) {
+      currentTab = name;
+      document.querySelectorAll(".tab-btn").forEach((btn, idx) => {
+        const tabNames = ["keys", "banned", "logs"];
+        btn.classList.toggle("active", tabNames[idx] === name);
+      });
 
-async function banHwidDirect(hwid) {
-  if (!confirm("HWID bannolod ezt az eszközt?\n" + hwid)) return;
-  await api("/admin/ban", { method: "POST", body: JSON.stringify({ hwid, reason: "Manual admin ban" }) });
-  toast("HWID bannolva!", "#f94141"); loadKeys();
-}
+      document.getElementById("sec-keys").classList.toggle("hidden", name !== "keys");
+      document.getElementById("sec-banned").classList.toggle("hidden", name !== "banned");
+      document.getElementById("sec-logs").classList.toggle("hidden", name !== "logs");
 
-async function loadBanned() {
-  const list = await api("/admin/banned");
-  if (!list) return;
-  document.getElementById("bannedBody").innerHTML = list.map(b => `<tr>
-    <td><code style="font-size:.78rem">${b.hwid}</code></td>
-    <td style="color:#888">${b.reason || "-"}</td>
-    <td style="font-size:.8rem;color:#888">${b.banned_at?.split("T")[0] || "-"}</td>
-    <td><button class="small" onclick="unban('${b.hwid}')">Feloldás</button></td>
-  </tr>`).join("");
-}
+      refreshCurrentTab();
+    }
 
-async function unban(hwid) {
-  await api("/admin/unban", { method: "POST", body: JSON.stringify({ hwid }) });
-  toast("Ban feloldva!"); loadBanned();
-}
+    function refreshCurrentTab() {
+      if (currentTab === "keys") loadKeys();
+      else if (currentTab === "banned") loadBanned();
+      else if (currentTab === "logs") loadLogs();
+    }
 
-async function loadLogs() {
-  const logs = await api("/admin/logs");
-  if (!logs) return;
-  const colors = { VALID: "#3ecf8e", ACTIVATED: "#7c5cbf", INVALID: "#f5a623", EXPIRED: "#f5a623", BANNED: "#f94141", AUTO_BANNED: "#f94141", HWID_MISMATCH: "#f94141" };
-  document.getElementById("logsBody").innerHTML = logs.map(l => `<tr>
-    <td style="font-size:.78rem;color:#888">${l.ts?.split("T").join(" ").split(".")[0]}</td>
-    <td style="font-size:.78rem">${l.type}</td>
-    <td><code style="font-size:.78rem">${l.key || "-"}</code></td>
-    <td style="font-family:monospace;font-size:.72rem;color:#888">${l.hwid ? l.hwid.substring(0,10)+"..." : "-"}</td>
-    <td style="font-size:.78rem;color:#888">${l.ip || "-"}</td>
-    <td><span style="color:${colors[l.result]||"#888"};font-weight:700;font-size:.78rem">${l.result}</span></td>
-  </tr>`).join("");
-}
-</script>
+    async function loadKeys() {
+      const data = await api("/admin/keys");
+      if (data) renderKeys(data);
+    }
+
+    function renderKeys(keys) {
+      allKeys = keys;
+      updateStats(keys);
+      filterKeys();
+    }
+
+    function updateStats(keys) {
+      const total = keys.length;
+      const active = keys.filter(k => k.activated && !k.banned && (k.expires_at === "9999-12-31T23:59:59Z" || new Date(k.expires_at) > new Date())).length;
+      const inactive = keys.filter(k => !k.activated && !k.banned).length;
+      const banned = keys.filter(k => k.banned).length;
+
+      document.getElementById("statTotal").textContent = total;
+      document.getElementById("statActive").textContent = active;
+      document.getElementById("statInactive").textContent = inactive;
+      document.getElementById("statBanned").textContent = banned;
+    }
+
+    function filterKeys() {
+      const query = (document.getElementById("keySearchInput").value || "").trim().toLowerCase();
+      const filtered = allKeys.filter(k => {
+        return (k.key && k.key.toLowerCase().includes(query)) ||
+               (k.label && k.label.toLowerCase().includes(query)) ||
+               (k.hwid && k.hwid.toLowerCase().includes(query));
+      });
+
+      document.getElementById("keysCount").textContent = `${filtered.length} / ${allKeys.length} licenc megjelenítve`;
+
+      const tbody = document.getElementById("keysBody");
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <div>Nem található a keresésnek megfelelő licenckulcs.</div>
+        </td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(k => `
+        <tr>
+          <td>
+            <div class="key-cell">
+              <span>${k.key}</span>
+              <button class="btn-copy-inline" title="Másolás" onclick="copyToClipboard('${k.key}')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </td>
+          <td style="color:${k.label ? '#e2e8f0' : 'var(--text-muted)'}">${k.label || "-"}</td>
+          <td>${getStatusPill(k)}</td>
+          <td><span class="hwid-cell">${k.hwid ? k.hwid.substring(0, 12) + "..." : "Nincs hozzárendelve"}</span></td>
+          <td style="font-size:0.82rem;color:var(--text-muted)">${formatDate(k.activated_at)}</td>
+          <td style="font-size:0.82rem">${formatExpiry(k.expires_at)}</td>
+          <td>
+            <div class="action-group">
+              ${k.activated && !k.banned ? `
+                <button class="btn btn-blue btn-sm" onclick="resetKey('${k.key}')" title="Készülék leválasztása">
+                  HWID Feloldás
+                </button>
+              ` : ""}
+              ${!k.banned ? `
+                <button class="btn btn-danger btn-sm" onclick="revokeKey('${k.key}')" title="Licenc azonnali letiltása">
+                  Visszavonás
+                </button>
+              ` : ""}
+              ${k.hwid && !k.banned ? `
+                <button class="btn btn-danger btn-sm" onclick="banHwidDirect('${k.hwid}')" title="Eszköz teljes kitiltása">
+                  HWID Tiltás
+                </button>
+              ` : ""}
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function getStatusPill(k) {
+      if (k.banned) {
+        return '<span class="pill pill-banned"><span class="pill-dot"></span>Letiltva</span>';
+      }
+      if (!k.activated) {
+        return '<span class="pill pill-inactive"><span class="pill-dot"></span>Nem Aktív</span>';
+      }
+      if (k.expires_at !== "9999-12-31T23:59:59Z" && new Date(k.expires_at) < new Date()) {
+        return '<span class="pill pill-expired"><span class="pill-dot"></span>Lejárt</span>';
+      }
+      return '<span class="pill pill-active"><span class="pill-dot"></span>Aktív</span>';
+    }
+
+    function formatExpiry(exp) {
+      if (!exp) return "-";
+      if (exp.startsWith("9999")) return '<span style="color:#a78bfa;font-weight:600">Örökös</span>';
+      try {
+        const d = exp.split("T")[0];
+        const isPast = new Date(exp) < new Date();
+        return `<span style="color:${isPast ? 'var(--red)' : '#cbd5e1'}">${d}</span>`;
+      } catch {
+        return exp;
+      }
+    }
+
+    function formatDate(dt) {
+      if (!dt) return "-";
+      return dt.split("T")[0];
+    }
+
+    async function generateKey() {
+      const duration = document.getElementById("dur").value;
+      const label = document.getElementById("lbl").value.trim();
+
+      const data = await api("/admin/keys/generate", {
+        method: "POST",
+        body: JSON.stringify({ duration, label })
+      });
+
+      if (!data) return;
+
+      document.getElementById("lbl").value = "";
+      document.getElementById("generatedKeyText").textContent = data.key;
+      document.getElementById("keyBanner").style.display = "flex";
+
+      copyToClipboard(data.key);
+      showToast(`Új licenc sikeresen létrehozva és vágólapra másolva!`, "success");
+      loadKeys();
+    }
+
+    function copyGeneratedKey() {
+      const key = document.getElementById("generatedKeyText").textContent;
+      copyToClipboard(key);
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard?.writeText(text);
+      showToast(`Kimásolva: ${text}`, "info");
+    }
+
+    async function resetKey(key) {
+      if (!confirm(`Biztosan feloldod a(z) ${key} kulcshoz kötött eszközt (HWID)? A felhasználó így új telefonon is be tudja majd aktiválni.`)) return;
+      
+      const res = await api("/admin/keys/reset", {
+        method: "POST",
+        body: JSON.stringify({ key })
+      });
+
+      if (res) {
+        showToast("Eszköz sikeresen leválasztva a kulcsról!", "success");
+        loadKeys();
+      }
+    }
+
+    async function revokeKey(key) {
+      if (!confirm(`Biztosan visszavonod a(z) ${key} licenckulcsot? Ezzel azonnal megszűnik a felhasználó hozzáférése.`)) return;
+      
+      const res = await api("/admin/keys/revoke", {
+        method: "POST",
+        body: JSON.stringify({ key })
+      });
+
+      if (res) {
+        showToast("Licenckulcs visszavonva!", "error");
+        loadKeys();
+      }
+    }
+
+    async function banHwidDirect(hwid) {
+      if (!confirm(`Biztosan le akarod tiltani ezt a készüléket?\nHWID: ${hwid}`)) return;
+
+      const res = await api("/admin/ban", {
+        method: "POST",
+        body: JSON.stringify({ hwid, reason: "Admin felületről közvetlenül tiltva" })
+      });
+
+      if (res) {
+        showToast("Készülék sikeresen kitiltva!", "error");
+        loadKeys();
+      }
+    }
+
+    async function banHwidManual() {
+      const hwid = document.getElementById("banHwidInput").value.trim();
+      const reason = document.getElementById("banReasonInput").value.trim();
+
+      if (!hwid) {
+        showToast("Kérlek adj meg egy érvényes HWID-t!", "error");
+        return;
+      }
+
+      const res = await api("/admin/ban", {
+        method: "POST",
+        body: JSON.stringify({ hwid, reason: reason || "Manuális adminisztrátori tiltás" })
+      });
+
+      if (res) {
+        document.getElementById("banHwidInput").value = "";
+        document.getElementById("banReasonInput").value = "";
+        showToast("Eszköz tiltólistára helyezve!", "error");
+        loadBanned();
+      }
+    }
+
+    async function loadBanned() {
+      const list = await api("/admin/banned");
+      if (!list) return;
+
+      const tbody = document.getElementById("bannedBody");
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          <div>Jelenleg nincs letiltott eszköz a rendszerben.</div>
+        </td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(b => `
+        <tr>
+          <td><span class="hwid-cell" style="color:#f87171">${b.hwid}</span></td>
+          <td style="color:#e2e8f0">${b.reason || "-"}</td>
+          <td style="font-size:0.82rem;color:var(--text-muted)">${formatDate(b.banned_at)}</td>
+          <td>
+            <button class="btn btn-secondary btn-sm" onclick="unbanHwid('${b.hwid}')">
+              Feloldás
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    async function unbanHwid(hwid) {
+      const res = await api("/admin/unban", {
+        method: "POST",
+        body: JSON.stringify({ hwid })
+      });
+
+      if (res) {
+        showToast("Eszköz tiltása feloldva!", "success");
+        loadBanned();
+      }
+    }
+
+    async function loadLogs() {
+      const logs = await api("/admin/logs");
+      if (!logs) return;
+
+      const colors = {
+        VALID: "#10b981",
+        ACTIVATED: "#8b5cf6",
+        INVALID: "#f59e0b",
+        EXPIRED: "#f59e0b",
+        BANNED: "#ef4444",
+        AUTO_BANNED: "#ef4444",
+        HWID_MISMATCH: "#ef4444"
+      };
+
+      const labels = {
+        VALID: "Érvényes",
+        ACTIVATED: "Aktiválva",
+        INVALID: "Érvénytelen",
+        EXPIRED: "Lejárt",
+        BANNED: "Tiltva",
+        AUTO_BANNED: "Auto-Tiltva",
+        HWID_MISMATCH: "HWID Eltérés"
+      };
+
+      const tbody = document.getElementById("logsBody");
+      if (logs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div>Még nincsenek naplózott események.</div>
+        </td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = logs.map(l => `
+        <tr>
+          <td style="font-size:0.82rem;color:var(--text-muted)">${l.ts ? l.ts.replace("T", " ").split(".")[0] : "-"}</td>
+          <td><span style="font-weight:600;font-size:0.82rem">${l.type}</span></td>
+          <td><span class="key-cell" style="font-size:0.8rem">${l.key || "-"}</span></td>
+          <td><span class="hwid-cell">${l.hwid ? l.hwid.substring(0, 12) + "..." : "-"}</span></td>
+          <td style="font-size:0.82rem;color:var(--text-muted)">${l.ip || "-"}</td>
+          <td>
+            <span style="color:${colors[l.result] || '#94a3b8'};font-weight:700;font-size:0.8rem">
+              ${labels[l.result] || l.result}
+            </span>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    let toastTimer;
+    function showToast(msg, type = "info") {
+      const toast = document.getElementById("toast");
+      const text = document.getElementById("toastMsg");
+
+      text.textContent = msg;
+      toast.className = `show ${type}`;
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.className = "";
+      }, 3000);
+    }
+  </script>
 </body>
 </html>
