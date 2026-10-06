@@ -73,10 +73,10 @@
 
 <div class="login-wall" id="loginWall">
   <div class="card">
-    <h2>?? Admin BejelentkezÈs</h2>
+    <h2>?? Admin Bejelentkez√©s</h2>
     <label style="font-size:.82rem;color:var(--muted);margin-bottom:4px;display:block">Admin Token</label>
     <input type="password" id="tokenInput" placeholder="ADMIN_TOKEN">
-    <button onclick="login()" style="width:100%">BejelentkezÈs</button>
+    <button onclick="login()" style="width:100%">Bejelentkez√©s</button>
   </div>
 </div>
 
@@ -93,24 +93,24 @@
   <div class="section active" id="sec-keys">
     <div class="gen-form">
       <div class="field">
-        <label>Idıtartam</label>
+        <label>Id√µtartam</label>
         <select id="dur">
           <option value="30d">30 nap</option>
-          <option value="365d">1 Èv</option>
-          <option value="lifetime">÷rˆk</option>
+          <option value="365d">1 √©v</option>
+          <option value="lifetime">√ñr√∂k</option>
         </select>
       </div>
       <div class="field">
-        <label>MegjegyzÈs (opcion·lis)</label>
+        <label>Megjegyz√©s (opcion√°lis)</label>
         <input id="lbl" placeholder="pl. Discord: user123">
       </div>
       <div class="field" style="justify-content:flex-end">
-        <button onclick="generateKey()">+ Kulcs Gener·l·sa</button>
+        <button onclick="generateKey()">+ Kulcs Gener√°l√°sa</button>
       </div>
     </div>
     <div class="key-result" id="keyResult"></div>
     <table id="keysTable">
-      <thead><tr><th>Kulcs</th><th>MegjegyzÈs</th><th>St·tusz</th><th>HWID</th><th>Aktiv·lva</th><th>Lej·r</th><th>M˚veletek</th></tr></thead>
+      <thead><tr><th>Kulcs</th><th>Megjegyz√©s</th><th>St√°tusz</th><th>HWID</th><th>Aktiv√°lva</th><th>Lej√°r</th><th>M√ªveletek</th></tr></thead>
       <tbody id="keysBody"></tbody>
     </table>
   </div>
@@ -119,11 +119,11 @@
   <div class="section" id="sec-banned">
     <div class="ban-form">
       <input id="banHwid" placeholder="HWID (SHA-256 hash)">
-      <input id="banReason" placeholder="Indok (opcion·lis)">
+      <input id="banReason" placeholder="Indok (opcion√°lis)">
       <button class="danger" onclick="banHwid()">?? Ban</button>
     </div>
     <table>
-      <thead><tr><th>HWID</th><th>Indok</th><th>Bannolva</th><th>Felold·s</th></tr></thead>
+      <thead><tr><th>HWID</th><th>Indok</th><th>Bannolva</th><th>Felold√°s</th></tr></thead>
       <tbody id="bannedBody"></tbody>
     </table>
   </div>
@@ -131,7 +131,7 @@
   <!-- LOGS SECTION -->
   <div class="section" id="sec-logs">
     <table>
-      <thead><tr><th>Idı</th><th>TÌpus</th><th>Kulcs</th><th>HWID</th><th>IP</th><th>EredmÈny</th></tr></thead>
+      <thead><tr><th>Id√µ</th><th>T√≠pus</th><th>Kulcs</th><th>HWID</th><th>IP</th><th>Eredm√©ny</th></tr></thead>
       <tbody id="logsBody"></tbody>
     </table>
   </div>
@@ -164,7 +164,7 @@ function switchTab(name) {
 async function login() {
   TOKEN = document.getElementById("tokenInput").value;
   const data = await api("/admin/keys");
-  if (!data) { alert("Hib·s token!"); TOKEN = ""; return; }
+  if (!data) { alert("Hib√°s token!"); TOKEN = ""; return; }
   document.getElementById("loginWall").style.display = "none";
   document.getElementById("mainPanel").style.display = "block";
   loadKeys(); checkStatus();
@@ -189,15 +189,15 @@ async function generateKey() {
   el.textContent = data.key;
   el.style.display = "block";
   navigator.clipboard?.writeText(data.key);
-  toast("Kulcs v·gÛlapra m·solva: " + data.key);
+  toast("Kulcs v√°g√≥lapra m√°solva: " + data.key);
   loadKeys();
 }
 
 function statusPill(row) {
   if (row.banned) return '<span class="pill banned">Bannolva</span>';
-  if (!row.activated) return '<span class="pill inactive">Nem aktÌv</span>';
-  if (row.expires_at !== "9999-12-31T23:59:59Z" && new Date(row.expires_at) < new Date()) return '<span class="pill expired">Lej·rt</span>';
-  return '<span class="pill valid">AktÌv</span>';
+  if (!row.activated) return '<span class="pill inactive">Nem akt√≠v</span>';
+  if (row.expires_at !== "9999-12-31T23:59:59Z" && new Date(row.expires_at) < new Date()) return '<span class="pill expired">Lej√°rt</span>';
+  return '<span class="pill valid">Akt√≠v</span>';
 }
 
 async function loadKeys() {
@@ -206,9 +206,9 @@ async function loadKeys() {
   const total = keys.length, active = keys.filter(k => k.activated && !k.banned && (k.expires_at === "9999-12-31T23:59:59Z" || new Date(k.expires_at) > new Date())).length;
   const banned = keys.filter(k => k.banned).length, inactive = keys.filter(k => !k.activated).length;
   document.getElementById("statRow").innerHTML = `
-    <div class="stat"><div class="val">${total}</div><div class="lbl">÷sszes Kulcs</div></div>
-    <div class="stat"><div class="val" style="color:#3ecf8e">${active}</div><div class="lbl">AktÌv</div></div>
-    <div class="stat"><div class="val" style="color:#888">${inactive}</div><div class="lbl">Nem Aktiv·lt</div></div>
+    <div class="stat"><div class="val">${total}</div><div class="lbl">√ñsszes Kulcs</div></div>
+    <div class="stat"><div class="val" style="color:#3ecf8e">${active}</div><div class="lbl">Akt√≠v</div></div>
+    <div class="stat"><div class="val" style="color:#888">${inactive}</div><div class="lbl">Nem Aktiv√°lt</div></div>
     <div class="stat"><div class="val" style="color:#f94141">${banned}</div><div class="lbl">Bannolva</div></div>
   `;
   const tbody = document.getElementById("keysBody");
@@ -218,12 +218,19 @@ async function loadKeys() {
     <td>${statusPill(k)}</td>
     <td style="font-family:monospace;font-size:.75rem;color:#888">${k.hwid ? k.hwid.substring(0,12)+"..." : "-"}</td>
     <td style="color:#888;font-size:.8rem">${k.activated_at ? k.activated_at.split("T")[0] : "-"}</td>
-    <td style="font-size:.8rem">${k.expires_at === "9999-12-31T23:59:59Z" ? "? ÷rˆk" : (k.expires_at ? k.expires_at.split("T")[0] : "-")}</td>
+    <td style="font-size:.8rem">${k.expires_at === "9999-12-31T23:59:59Z" ? "? √ñr√∂k" : (k.expires_at ? k.expires_at.split("T")[0] : "-")}</td>
     <td>
       ${!k.banned ? `<button class="small danger" onclick="revokeKey('${k.key}')">Visszavon</button>` : ""}
       ${k.hwid && !k.banned ? `<button class="small danger" style="margin-left:6px" onclick="banHwidDirect('${k.hwid}')">HWID Ban</button>` : ""}
+      ${k.activated && !k.banned ? `<button class="small" style="margin-left:6px;background:#3b82f6" onclick="resetKey('${k.key}')">HWID Reset</button>` : ""}
     </td>
   </tr>`).join("");
+}
+
+async function resetKey(key) {
+  if (!confirm("Biztosan feloldod a kulcshoz k√∂t√∂tt eszk√∂zt (HWID)?\n" + key)) return;
+  await api("/admin/keys/reset", { method: "POST", body: JSON.stringify({ key }) });
+  toast("HWID feloldva!", "#3b82f6"); loadKeys();
 }
 
 async function revokeKey(key) {
@@ -241,7 +248,7 @@ async function banHwid() {
 }
 
 async function banHwidDirect(hwid) {
-  if (!confirm("HWID bannolod ezt az eszkˆzt?\n" + hwid)) return;
+  if (!confirm("HWID bannolod ezt az eszk√∂zt?\n" + hwid)) return;
   await api("/admin/ban", { method: "POST", body: JSON.stringify({ hwid, reason: "Manual admin ban" }) });
   toast("HWID bannolva!", "#f94141"); loadKeys();
 }
@@ -253,7 +260,7 @@ async function loadBanned() {
     <td><code style="font-size:.78rem">${b.hwid}</code></td>
     <td style="color:#888">${b.reason || "-"}</td>
     <td style="font-size:.8rem;color:#888">${b.banned_at?.split("T")[0] || "-"}</td>
-    <td><button class="small" onclick="unban('${b.hwid}')">Felold·s</button></td>
+    <td><button class="small" onclick="unban('${b.hwid}')">Felold√°s</button></td>
   </tr>`).join("");
 }
 
