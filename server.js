@@ -7,14 +7,23 @@ const fs = require("fs");
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, x-admin-token");
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+  next();
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
-// ¦¦¦ Config ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// ï¿½ï¿½ï¿½ Config ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "CHANGE_THIS_SECRET";
 const PORT = process.env.PORT || 3000;
 const DB_PATH = process.env.DB_PATH || "./szaby_licenses.db";
 
-// ¦¦¦ Database Setup ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// ï¿½ï¿½ï¿½ Database Setup ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 const db = new Database(DB_PATH);
 
 db.exec(`
@@ -49,7 +58,7 @@ db.exec(`
   );
 `);
 
-// ¦¦¦ Helpers ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// ï¿½ï¿½ï¿½ Helpers ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 function generateKey() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const rand = (n) => Array.from({ length: n }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
@@ -77,11 +86,12 @@ function log(type, key, hwid, ip, result) {
   } catch (_) {}
 }
 
-// ¦¦¦ PUBLIC API ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// ï¿½ï¿½ï¿½ PUBLIC API ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 // Validate key + HWID
 app.get("/api/validate", (req, res) => {
-  const { key, hwid } = req.query;
+  const key = (req.query.key || "").trim().toUpperCase();
+  const hwid = (req.query.hwid || "").trim();
   const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
   if (!key || !hwid) return res.json({ status: "INVALID", reason: "Missing params" });
@@ -142,7 +152,7 @@ app.post("/api/report-bypass", (req, res) => {
   return res.json({ status: "ok" });
 });
 
-// ¦¦¦ ADMIN API ¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦
+// ï¿½ï¿½ï¿½ ADMIN API ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 // Generate key
 app.post("/admin/keys/generate", adminGuard, (req, res) => {
@@ -167,8 +177,16 @@ app.get("/admin/keys", adminGuard, (req, res) => {
 // Revoke key
 app.post("/admin/keys/revoke", adminGuard, (req, res) => {
   const { key } = req.body;
-  db.prepare("UPDATE keys SET banned=1 WHERE key=?").run(key);
+  db.prepare("UPDATE keys SET banned=1 WHERE key=?").run((key || "").trim().toUpperCase());
   res.json({ status: "ok" });
+});
+
+// Reset key (unbind HWID for device transfer)
+app.post("/admin/keys/reset", adminGuard, (req, res) => {
+  const { key } = req.body;
+  const cleanKey = (key || "").trim().toUpperCase();
+  db.prepare("UPDATE keys SET activated=0, hwid=NULL, activated_at=NULL, expires_at=NULL WHERE key=?").run(cleanKey);
+  res.json({ status: "ok", key: cleanKey });
 });
 
 // HWID Ban
