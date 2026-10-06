@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Szaby Licenc Kezelőpult</title>
+  <title>Szaby Licenc & Távirányító Központ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -50,17 +50,17 @@
 
     /* Header */
     header {
-      background: rgba(13, 15, 22, 0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(9, 10, 15, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
-      padding: 16px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 50;
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .brand {
@@ -68,18 +68,18 @@
       align-items: center;
       gap: 12px;
       text-decoration: none;
-      color: inherit;
+      color: var(--text);
     }
 
     .brand-icon {
-      width: 38px;
-      height: 38px;
+      width: 40px;
+      height: 40px;
       border-radius: var(--radius-md);
       background: linear-gradient(135deg, var(--accent), var(--cyan));
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 16px var(--accent-glow);
+      box-shadow: 0 0 20px var(--accent-glow);
     }
 
     .brand-icon svg {
@@ -92,9 +92,21 @@
       font-size: 1.15rem;
       font-weight: 800;
       letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #ffffff 40%, var(--accent-light));
+      background: linear-gradient(to right, #fff, #cbd5e1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    .brand-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: var(--accent-light);
     }
 
     .header-actions {
@@ -110,9 +122,9 @@
       font-size: 0.82rem;
       font-weight: 500;
       color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.04);
-      padding: 6px 14px;
-      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 6px 12px;
+      border-radius: 20px;
       border: 1px solid var(--border);
     }
 
@@ -121,26 +133,31 @@
       height: 8px;
       border-radius: 50%;
       background: var(--yellow);
-      transition: background 0.3s;
+      box-shadow: 0 0 8px var(--yellow);
     }
 
     .status-dot.online {
       background: var(--green);
-      box-shadow: 0 0 10px var(--green);
+      box-shadow: 0 0 8px var(--green);
     }
 
-    .status-dot.offline {
-      background: var(--red);
-      box-shadow: 0 0 10px var(--red);
+    .status-dot.pulsing {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
 
     .btn-logout {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 6px 14px;
-      font-size: 0.82rem;
+      padding: 6px 12px;
       border-radius: var(--radius-sm);
+      font-size: 0.8rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -156,7 +173,7 @@
 
     /* Container */
     .container {
-      max-width: 1240px;
+      max-width: 1280px;
       width: 100%;
       margin: 0 auto;
       padding: 32px 24px;
@@ -225,7 +242,7 @@
       letter-spacing: 0.5px;
     }
 
-    input, select {
+    input, select, textarea {
       width: 100%;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border);
@@ -238,7 +255,7 @@
       transition: all 0.2s;
     }
 
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       border-color: var(--accent);
       background: rgba(255, 255, 255, 0.07);
       box-shadow: 0 0 0 3px var(--accent-glow);
@@ -249,74 +266,41 @@
       color: var(--text);
     }
 
-    /* Buttons */
     .btn {
-      background: linear-gradient(135deg, var(--accent), #7038db);
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
       color: white;
       border: none;
-      padding: 12px 22px;
+      padding: 12px 20px;
       border-radius: var(--radius-md);
+      font-size: 0.9rem;
       font-weight: 600;
-      font-size: 0.92rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 14px var(--accent-glow);
       transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+      width: 100%;
     }
 
     .btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px var(--accent-glow);
-      filter: brightness(1.1);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    .btn.btn-block {
-      width: 100%;
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
     }
 
     .btn-secondary {
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
       color: var(--text);
       box-shadow: none;
+      width: auto;
     }
 
     .btn-secondary:hover {
       background: rgba(255, 255, 255, 0.1);
       box-shadow: none;
-    }
-
-    .btn-danger {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: var(--red);
-      box-shadow: none;
-    }
-
-    .btn-danger:hover {
-      background: var(--red);
-      color: white;
-      box-shadow: 0 4px 14px var(--red-glow);
-    }
-
-    .btn-blue {
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: var(--blue);
-      box-shadow: none;
-    }
-
-    .btn-blue:hover {
-      background: var(--blue);
-      color: white;
-      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+      transform: none;
     }
 
     .btn-sm {
@@ -325,12 +309,49 @@
       border-radius: var(--radius-sm);
     }
 
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      box-shadow: none;
+      width: auto;
+    }
+    .btn-danger:hover {
+      background: var(--red);
+      color: white;
+      box-shadow: 0 4px 12px var(--red-glow);
+    }
+
+    .btn-blue {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      box-shadow: none;
+      width: auto;
+    }
+    .btn-blue:hover {
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn-green {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      box-shadow: none;
+      width: auto;
+    }
+    .btn-green:hover {
+      background: var(--green);
+      color: white;
+    }
+
     /* Stats Grid */
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 20px;
-      margin-bottom: 32px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
     }
 
     .stat-card {
@@ -338,14 +359,14 @@
       backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 24px;
+      padding: 20px;
       position: relative;
       overflow: hidden;
       transition: all 0.2s;
     }
 
     .stat-card:hover {
-      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.15);
       transform: translateY(-2px);
     }
 
@@ -365,11 +386,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .stat-title {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -386,7 +407,7 @@
     }
 
     .stat-val {
-      font-size: 2.1rem;
+      font-size: 2rem;
       font-weight: 800;
       letter-spacing: -1px;
     }
@@ -405,6 +426,7 @@
     .tabs {
       display: flex;
       gap: 8px;
+      overflow-x: auto;
     }
 
     .tab-btn {
@@ -421,6 +443,7 @@
       border-bottom: 2px solid transparent;
       margin-bottom: -1px;
       transition: all 0.2s;
+      white-space: nowrap;
     }
 
     .tab-btn:hover {
@@ -437,7 +460,7 @@
       height: 18px;
     }
 
-    /* Generator Card */
+    /* Panels */
     .card-panel {
       background: var(--bg-card);
       backdrop-filter: blur(16px);
@@ -455,61 +478,60 @@
     }
 
     .panel-title {
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .generator-grid {
       display: grid;
-      grid-template-columns: 200px 1fr auto;
+      grid-template-columns: 1fr 1.6fr auto;
       gap: 16px;
       align-items: flex-end;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 860px) {
       .generator-grid {
         grid-template-columns: 1fr;
       }
     }
 
     .generated-key-banner {
-      display: none;
+      margin-top: 20px;
       background: rgba(139, 92, 246, 0.1);
-      border: 1px solid rgba(139, 92, 246, 0.35);
+      border: 1px solid rgba(139, 92, 246, 0.3);
       border-radius: var(--radius-md);
       padding: 16px 20px;
-      margin-top: 20px;
+      display: none;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      animation: fadeIn 0.3s ease;
     }
 
     .key-display {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.15rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: var(--accent-light);
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
     }
 
-    /* Search & Filter Toolbar */
+    /* Tables */
     .table-toolbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
       margin-bottom: 16px;
+      gap: 16px;
       flex-wrap: wrap;
     }
 
     .search-box {
       position: relative;
-      flex: 1;
       max-width: 360px;
+      width: 100%;
     }
 
     .search-box svg {
@@ -517,24 +539,21 @@
       left: 14px;
       top: 50%;
       transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       color: var(--text-muted);
+      pointer-events: none;
     }
 
     .search-box input {
-      padding-left: 40px;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      font-size: 0.86rem;
+      padding-left: 42px;
     }
 
-    /* Table Container */
     .table-responsive {
-      overflow-x: auto;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
       background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
     }
 
     table {
@@ -545,20 +564,20 @@
     }
 
     th {
+      background: rgba(255, 255, 255, 0.02);
       padding: 14px 18px;
-      color: var(--text-muted);
-      font-weight: 600;
       font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.6px;
-      background: rgba(255, 255, 255, 0.02);
       border-bottom: 1px solid var(--border);
+      white-space: nowrap;
     }
 
     td {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border);
-      color: #cbd5e1;
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
       vertical-align: middle;
     }
 
@@ -573,45 +592,30 @@
     .key-cell {
       font-family: 'JetBrains Mono', monospace;
       font-weight: 600;
-      color: #f1f5f9;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-copy-inline {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 3px;
-      border-radius: 4px;
-      transition: all 0.2s;
-    }
-
-    .btn-copy-inline:hover {
-      color: var(--accent-light);
-      background: rgba(255, 255, 255, 0.06);
+      color: #e2e8f0;
+      letter-spacing: 0.5px;
     }
 
     .hwid-cell {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.78rem;
       color: var(--text-muted);
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
     }
 
-    /* Status Pills */
+    /* Badges */
     .pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 4px 10px;
-      border-radius: 999px;
+      border-radius: 20px;
       font-size: 0.74rem;
-      font-weight: 600;
-      text-transform: uppercase;
+      font-weight: 700;
       letter-spacing: 0.3px;
     }
 
@@ -649,11 +653,51 @@
     }
     .pill-banned .pill-dot { background: #ef4444; }
 
+    .badge-yt {
+      background: rgba(239, 68, 68, 0.18);
+      color: #ff6b6b;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .badge-ytm {
+      background: rgba(6, 182, 212, 0.18);
+      color: #22d3ee;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
     .action-group {
       display: flex;
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
+    }
+
+    .video-link {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.15s;
+    }
+    .video-link:hover {
+      color: #93c5fd;
+      text-decoration: underline;
     }
 
     /* Empty state */
@@ -702,11 +746,6 @@
     #toast.error { border-color: rgba(239, 68, 68, 0.4); }
     #toast.info { border-color: rgba(59, 130, 246, 0.4); }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     .hidden { display: none !important; }
   </style>
 </head>
@@ -721,8 +760,9 @@
         </svg>
       </div>
       <div>
-        <div class="brand-title">Szaby Licenc Rendszer</div>
+        <div class="brand-title">Szaby Licenc & Dev Vezérlőpult</div>
       </div>
+      <div class="brand-badge">ADMIN v2.0</div>
     </a>
 
     <div class="header-actions">
@@ -747,32 +787,29 @@
         </svg>
       </div>
       <h2>Adminisztrátori Belépés</h2>
-      <p>Kérlek add meg a titkos adminisztrátori tokent a folytatáshoz.</p>
+      <p>Add meg a titkos adminisztrátori tokent a folytatáshoz.</p>
       
-      <form onsubmit="handleLogin(event)">
-        <div class="form-group">
-          <label for="tokenInput">Admin Token</label>
-          <input type="password" id="tokenInput" placeholder="Add meg a tokent..." required autofocus>
-        </div>
-        <button type="submit" class="btn btn-block">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-          Belépés a Vezérlőpultra
-        </button>
-      </form>
+      <div class="form-group">
+        <label for="adminTokenInput">Titkos Token (ADMIN_TOKEN)</label>
+        <input type="password" id="adminTokenInput" placeholder="Token beírása..." onkeydown="if(event.key==='Enter') login()">
+      </div>
+
+      <button class="btn" onclick="login()">
+        Belépés a Vezérlőbe
+      </button>
     </div>
   </div>
 
   <!-- Main Dashboard -->
-  <div class="container hidden" id="mainPanel">
-    
-    <!-- Statisztikák -->
-    <div class="stats-grid" id="statsGrid">
+  <div class="container hidden" id="dashboard">
+    <!-- Statisztikák kártyák -->
+    <div class="stats-grid">
       <div class="stat-card">
         <div class="glow" style="background: var(--accent);"></div>
         <div class="stat-header">
           <span class="stat-title">Összes Licenc</span>
           <div class="stat-icon" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-light);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-6 6l7 7-3 3-7-7-3 3-4-4 3-3-7-7 3-3 7 7 3-3z"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
         </div>
         <div class="stat-val" id="statTotal">-</div>
@@ -790,14 +827,14 @@
       </div>
 
       <div class="stat-card">
-        <div class="glow" style="background: var(--yellow);"></div>
+        <div class="glow" style="background: var(--cyan);"></div>
         <div class="stat-header">
-          <span class="stat-title">Nem Aktivált</span>
-          <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--yellow);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="stat-title">Épp Most Online</span>
+          <div class="stat-icon" style="background: rgba(6, 182, 212, 0.15); color: var(--cyan);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           </div>
         </div>
-        <div class="stat-val" id="statInactive" style="color: var(--text-muted);">-</div>
+        <div class="stat-val" id="statOnline" style="color: var(--cyan);">-</div>
       </div>
 
       <div class="stat-card">
@@ -815,28 +852,143 @@
     <!-- Fülek -->
     <div class="tabs-wrapper">
       <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('keys')">
+        <button class="tab-btn active" id="tab-btn-sessions" onclick="switchTab('sessions')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Élő Megfigyelő (Mit néznek)
+        </button>
+        <button class="tab-btn" id="tab-btn-messages" onclick="switchTab('messages')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Üzenetküldő Központ
+        </button>
+        <button class="tab-btn" id="tab-btn-keys" onclick="switchTab('keys')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-6 6l7 7-3 3-7-7-3 3-4-4 3-3-7-7 3-3 7 7 3-3z"/></svg>
           Licenc Kulcsok
         </button>
-        <button class="tab-btn" onclick="switchTab('banned')">
+        <button class="tab-btn" id="tab-btn-banned" onclick="switchTab('banned')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           HWID Tiltólista
         </button>
-        <button class="tab-btn" onclick="switchTab('logs')">
+        <button class="tab-btn" id="tab-btn-logs" onclick="switchTab('logs')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           Rendszer Napló
         </button>
       </div>
 
-      <button class="btn btn-secondary btn-sm" onclick="refreshCurrentTab()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-        Frissítés
-      </button>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn btn-secondary btn-sm" onclick="refreshCurrentTab()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Frissítés
+        </button>
+      </div>
     </div>
 
-    <!-- 1. KULCSOK SZEKCIÓ -->
-    <div id="sec-keys">
+    <!-- 0. ÉLŐ MEGFIGYELŐ SZEKCIÓ -->
+    <div id="sec-sessions">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+            Valós Idejű Lejátszási Monitor
+          </div>
+          <div style="font-size:0.82rem;color:var(--text-muted)">
+            Automatikus frissülés: <span style="color:var(--green);font-weight:600">5 másodpercenként</span>
+          </div>
+        </div>
+        <p style="font-size:0.86rem;color:var(--text-muted);margin-bottom:16px">
+          Itt valós időben láthatod, hogy az aktív előfizetők éppen milyen videót néznek vagy zenét hallgatnak a YouTube és YouTube Music alkalmazásban. A videó linkre kattintva te is azonnal meg tudod nézni a YouTube-on!
+        </p>
+      </div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Státusz</th>
+              <th>Alkalmazás</th>
+              <th>Felhasználó / Kulcs</th>
+              <th>Jelenleg Játszott Tartalom</th>
+              <th>Csatorna / Előadó</th>
+              <th>Utolsó Aktivitás</th>
+              <th>Művelet</th>
+            </tr>
+          </thead>
+          <tbody id="sessionsBody">
+            <tr><td colspan="7" class="empty-state">Betöltés...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 1. ÜZENETKÜLDŐ KÖZPONT SZEKCIÓ -->
+    <div id="sec-messages" class="hidden">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Üzenet Küldése a Felhasználók Alkalmazásába
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:16px">
+          <div class="form-group" style="margin-bottom:0">
+            <label for="msgTarget">Címzett Készülék</label>
+            <select id="msgTarget">
+              <option value="ALL">📢 Minden Online Felhasználó (Broadcast)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0">
+            <label for="msgType">Üzenet Típusa</label>
+            <select id="msgType">
+              <option value="dialog">Felugró Párbeszédpanel (Popup Dialog - 'OK' gombbal)</option>
+              <option value="toast">Gyors Alsó Értesítés (Toast sáv)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="msgTitle">Értesítés Címe</label>
+          <input id="msgTitle" placeholder="pl. Fejlesztői Közlemény" value="Admin Közlemény">
+        </div>
+
+        <div class="form-group">
+          <label for="msgBody">Üzenet Szövege</label>
+          <textarea id="msgBody" rows="3" placeholder="Írd be az üzenetet amit a YouTube képernyőjén látni fognak..."></textarea>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end">
+          <button class="btn" style="max-width:280px" onclick="sendMessage()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Üzenet Kiküldése Most
+          </button>
+        </div>
+      </div>
+
+      <div class="panel-title" style="margin-bottom:14px">
+        Korábban Kiküldött Üzenetek
+      </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Dátum</th>
+              <th>Címzett</th>
+              <th>Típus</th>
+              <th>Cím</th>
+              <th>Üzenet</th>
+              <th>Átvéve</th>
+              <th>Művelet</th>
+            </tr>
+          </thead>
+          <tbody id="messagesBody">
+            <tr><td colspan="7" class="empty-state">Betöltés...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 2. KULCSOK SZEKCIÓ -->
+    <div id="sec-keys" class="hidden">
       <!-- Generátor Kártya -->
       <div class="card-panel">
         <div class="panel-header">
@@ -898,40 +1050,45 @@
             <tr>
               <th>Licenc Kulcs</th>
               <th>Vásárló / Megjegyzés</th>
-              <th>Állapot</th>
-              <th>Eszköz HWID</th>
-              <th>Aktiválás Dátuma</th>
+              <th>Státusz</th>
+              <th>Készülék (HWID)</th>
+              <th>Időtartam</th>
+              <th>Aktiválva</th>
               <th>Lejárat</th>
               <th>Műveletek</th>
             </tr>
           </thead>
-          <tbody id="keysBody"></tbody>
+          <tbody id="keysBody">
+            <tr><td colspan="8" class="empty-state">Betöltés...</td></tr>
+          </tbody>
         </table>
       </div>
     </div>
 
-    <!-- 2. TILTÓLISTA SZEKCIÓ -->
+    <!-- 3. TILTÓLISTA SZEKCIÓ -->
     <div id="sec-banned" class="hidden">
       <div class="card-panel">
         <div class="panel-header">
           <div class="panel-title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-            Készülék Manuális Letiltása
+            Készülék Kitiltása (HWID)
           </div>
         </div>
 
         <div class="generator-grid">
           <div class="form-group" style="margin-bottom:0">
             <label for="banHwidInput">Eszköz HWID</label>
-            <input id="banHwidInput" placeholder="SHA-256 lenyomat">
+            <input id="banHwidInput" placeholder="Készülék SHA-256 azonosítója">
           </div>
+
           <div class="form-group" style="margin-bottom:0">
-            <label for="banReasonInput">Tiltás Indoka</label>
-            <input id="banReasonInput" placeholder="pl. Jogosulatlan visszaélés, csalás">
+            <label for="banReasonInput">Kitiltás Indoka</label>
+            <input id="banReasonInput" placeholder="pl. Visszaélés, illegális megosztás">
           </div>
+
           <button class="btn btn-danger" onclick="banHwidManual()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-            Eszköz Tiltása
+            Kitiltás
           </button>
         </div>
       </div>
@@ -940,213 +1097,386 @@
         <table>
           <thead>
             <tr>
-              <th>Letiltott HWID</th>
+              <th>Kitiltott HWID</th>
               <th>Indoklás</th>
-              <th>Tiltás Ideje</th>
+              <th>Dátum</th>
               <th>Művelet</th>
             </tr>
           </thead>
-          <tbody id="bannedBody"></tbody>
+          <tbody id="bannedBody">
+            <tr><td colspan="4" class="empty-state">Betöltés...</td></tr>
+          </tbody>
         </table>
       </div>
     </div>
 
-    <!-- 3. NAPLÓ SZEKCIÓ -->
+    <!-- 4. NAPLÓ SZEKCIÓ -->
     <div id="sec-logs" class="hidden">
       <div class="table-responsive">
         <table>
           <thead>
             <tr>
-              <th>Időbélyeg</th>
-              <th>Esemény Típusa</th>
-              <th>Licenc Kulcs</th>
-              <th>Eszköz HWID</th>
+              <th>Időpont</th>
+              <th>Esemény</th>
+              <th>Kulcs</th>
+              <th>Készülék (HWID)</th>
               <th>IP Cím</th>
               <th>Eredmény</th>
             </tr>
           </thead>
-          <tbody id="logsBody"></tbody>
+          <tbody id="logsBody">
+            <tr><td colspan="6" class="empty-state">Betöltés...</td></tr>
+          </tbody>
         </table>
       </div>
     </div>
-
   </div>
 
-  <!-- Toast Értesítés -->
   <div id="toast">
-    <span id="toastIcon"></span>
-    <span id="toastMsg"></span>
+    <span id="toastMsg">Értesítés</span>
   </div>
 
   <script>
-    let TOKEN = "";
+    let TOKEN = localStorage.getItem("szaby_admin_token") || "";
     let allKeys = [];
-    let currentTab = "keys";
+    let currentTab = "sessions";
+    let liveTimer = null;
 
-    // Auto-login from localStorage
     window.addEventListener("DOMContentLoaded", () => {
-      checkServerHealth();
-      setInterval(checkServerHealth, 30000);
-
-      const savedToken = localStorage.getItem("szaby_admin_token");
-      if (savedToken) {
-        TOKEN = savedToken;
-        verifyAndOpen();
+      checkHealth();
+      if (TOKEN) {
+        showDashboard();
+      } else {
+        document.getElementById("loginWall").classList.remove("hidden");
       }
     });
 
-    async function checkServerHealth() {
-      const dot = document.getElementById("statusDot");
-      const text = document.getElementById("serverStatusText");
+    async function checkHealth() {
       try {
         const res = await fetch("/health");
         if (res.ok) {
-          dot.className = "status-dot online";
-          text.textContent = "Szerver Online (Render)";
+          document.getElementById("statusDot").className = "status-dot online";
+          document.getElementById("serverStatusText").textContent = "Szerver Online";
         } else {
-          dot.className = "status-dot offline";
-          text.textContent = "Szerver Hiba";
+          throw new Error();
         }
-      } catch (err) {
-        dot.className = "status-dot offline";
-        text.textContent = "Kapcsolódási hiba";
+      } catch {
+        document.getElementById("statusDot").className = "status-dot";
+        document.getElementById("serverStatusText").textContent = "Szerver Nem Elérhető";
       }
     }
 
-    async function api(path, opts = {}) {
-      try {
-        const res = await fetch(path, {
-          headers: {
-            "x-admin-token": TOKEN,
-            "Content-Type": "application/json"
-          },
-          ...opts
-        });
-
-        if (res.status === 403) {
-          showToast("A munkamenet lejárt vagy érvénytelen a token!", "error");
-          logout();
-          return null;
-        }
-
-        return await res.json();
-      } catch (err) {
-        showToast("Hálózati hiba történt a kérés közben!", "error");
-        return null;
-      }
-    }
-
-    async function handleLogin(e) {
-      e.preventDefault();
-      const tokenVal = document.getElementById("tokenInput").value.trim();
-      if (!tokenVal) return;
-
-      TOKEN = tokenVal;
-      await verifyAndOpen();
-    }
-
-    async function verifyAndOpen() {
-      const data = await api("/admin/keys");
-      if (!data) {
-        TOKEN = "";
-        localStorage.removeItem("szaby_admin_token");
+    function login() {
+      const input = document.getElementById("adminTokenInput").value.trim();
+      if (!input) {
+        showToast("Kérlek írd be az adminisztrátori tokent!", "error");
         return;
       }
-
+      TOKEN = input;
       localStorage.setItem("szaby_admin_token", TOKEN);
-      document.getElementById("loginWall").classList.add("hidden");
-      document.getElementById("mainPanel").classList.remove("hidden");
-      document.getElementById("logoutBtn").classList.remove("hidden");
-
-      renderKeys(data);
-      switchTab("keys");
-      showToast("Sikeres bejelentkezés!", "success");
+      showDashboard();
     }
 
     function logout() {
       TOKEN = "";
       localStorage.removeItem("szaby_admin_token");
-      document.getElementById("tokenInput").value = "";
-      document.getElementById("loginWall").classList.remove("hidden");
-      document.getElementById("mainPanel").classList.add("hidden");
+      if (liveTimer) clearInterval(liveTimer);
+      document.getElementById("dashboard").classList.add("hidden");
       document.getElementById("logoutBtn").classList.add("hidden");
+      document.getElementById("loginWall").classList.remove("hidden");
+      document.getElementById("adminTokenInput").value = "";
     }
 
-    function switchTab(name) {
-      currentTab = name;
-      document.querySelectorAll(".tab-btn").forEach((btn, idx) => {
-        const tabNames = ["keys", "banned", "logs"];
-        btn.classList.toggle("active", tabNames[idx] === name);
-      });
+    async function api(path, opts = {}) {
+      opts.headers = {
+        ...opts.headers,
+        "x-admin-token": TOKEN,
+        "Content-Type": "application/json"
+      };
 
-      document.getElementById("sec-keys").classList.toggle("hidden", name !== "keys");
-      document.getElementById("sec-banned").classList.toggle("hidden", name !== "banned");
-      document.getElementById("sec-logs").classList.toggle("hidden", name !== "logs");
+      try {
+        const res = await fetch(path, opts);
+        if (res.status === 403) {
+          showToast("Érvénytelen adminisztrátori token!", "error");
+          logout();
+          return null;
+        }
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          showToast(errData.error || `Hiba: ${res.status}`, "error");
+          return null;
+        }
+        return await res.json();
+      } catch (err) {
+        showToast("Hálózati hiba a kérés közben!", "error");
+        return null;
+      }
+    }
+
+    function showDashboard() {
+      document.getElementById("loginWall").classList.add("hidden");
+      document.getElementById("dashboard").classList.remove("hidden");
+      document.getElementById("logoutBtn").classList.remove("hidden");
+
+      switchTab(currentTab);
+
+      // Start periodic monitor refresh every 5 seconds
+      if (liveTimer) clearInterval(liveTimer);
+      liveTimer = setInterval(() => {
+        if (currentTab === "sessions") loadSessions(true);
+      }, 5000);
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      const activeBtn = document.getElementById(`tab-btn-${tab}`);
+      if (activeBtn) activeBtn.classList.add("active");
+
+      document.getElementById("sec-sessions").classList.add("hidden");
+      document.getElementById("sec-messages").classList.add("hidden");
+      document.getElementById("sec-keys").classList.add("hidden");
+      document.getElementById("sec-banned").classList.add("hidden");
+      document.getElementById("sec-logs").classList.add("hidden");
+
+      document.getElementById(`sec-${tab}`).classList.remove("hidden");
 
       refreshCurrentTab();
     }
 
     function refreshCurrentTab() {
+      loadKeys(); // updates stat bar
+      if (currentTab === "sessions") loadSessions();
+      if (currentTab === "messages") { loadMessages(); updateTargetDropdown(); }
       if (currentTab === "keys") loadKeys();
-      else if (currentTab === "banned") loadBanned();
-      else if (currentTab === "logs") loadLogs();
+      if (currentTab === "banned") loadBanned();
+      if (currentTab === "logs") loadLogs();
     }
 
-    async function loadKeys() {
-      const data = await api("/admin/keys");
-      if (data) renderKeys(data);
-    }
+    /* ─── SESSIONS MONITOR ─── */
+    async function loadSessions(isBackground = false) {
+      const list = await api("/admin/sessions");
+      if (!list) return;
 
-    function renderKeys(keys) {
-      allKeys = keys;
-      updateStats(keys);
-      filterKeys();
-    }
+      const onlineCount = list.filter(s => s.is_online).length;
+      document.getElementById("statOnline").textContent = onlineCount;
 
-    function updateStats(keys) {
-      const total = keys.length;
-      const active = keys.filter(k => k.activated && !k.banned && (k.expires_at === "9999-12-31T23:59:59Z" || new Date(k.expires_at) > new Date())).length;
-      const inactive = keys.filter(k => !k.activated && !k.banned).length;
-      const banned = keys.filter(k => k.banned).length;
-
-      document.getElementById("statTotal").textContent = total;
-      document.getElementById("statActive").textContent = active;
-      document.getElementById("statInactive").textContent = inactive;
-      document.getElementById("statBanned").textContent = banned;
-    }
-
-    function filterKeys() {
-      const query = (document.getElementById("keySearchInput").value || "").trim().toLowerCase();
-      const filtered = allKeys.filter(k => {
-        return (k.key && k.key.toLowerCase().includes(query)) ||
-               (k.label && k.label.toLowerCase().includes(query)) ||
-               (k.hwid && k.hwid.toLowerCase().includes(query));
-      });
-
-      document.getElementById("keysCount").textContent = `${filtered.length} / ${allKeys.length} licenc megjelenítve`;
-
-      const tbody = document.getElementById("keysBody");
-      if (filtered.length === 0) {
+      const tbody = document.getElementById("sessionsBody");
+      if (list.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" class="empty-state">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <div>Nem található a keresésnek megfelelő licenckulcs.</div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <div>Még egyetlen készülék sem küldött lejátszási adatot. Indítsd el a YouTube-ot a telefonon!</div>
         </td></tr>`;
         return;
       }
 
-      tbody.innerHTML = filtered.map(k => `
-        <tr>
-          <td>
-            <div class="key-cell">
-              <span>${k.key}</span>
-              <button class="btn-copy-inline" title="Másolás" onclick="copyToClipboard('${k.key}')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      tbody.innerHTML = list.map(s => {
+        const isOnline = s.is_online;
+        const appBadge = (s.app_type || "").toLowerCase().includes("music")
+          ? '<span class="badge-ytm">🎵 YT Music</span>'
+          : '<span class="badge-yt">▶ YouTube</span>';
+
+        const videoWatchLink = s.video_id 
+          ? `<a href="https://www.youtube.com/watch?v=${s.video_id}" target="_blank" class="video-link">
+               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+               ${s.video_title || s.video_id}
+             </a>`
+          : '<span style="color:var(--text-muted);font-style:italic">Nincs lejátszás</span>';
+
+        const statusPill = isOnline
+          ? '<span class="pill pill-active"><span class="pill-dot pulsing"></span>ONLINE</span>'
+          : '<span class="pill pill-inactive"><span class="pill-dot"></span>Inaktív</span>';
+
+        return `
+          <tr>
+            <td>${statusPill}</td>
+            <td>${appBadge}</td>
+            <td>
+              <div style="font-weight:600">${s.label || "Névtelen"}</div>
+              <div class="key-cell" style="font-size:0.76rem">${s.key || "-"}</div>
+              <div class="hwid-cell" title="${s.hwid}">${s.hwid || "-"}</div>
+            </td>
+            <td>${videoWatchLink}</td>
+            <td style="color:#cbd5e1">${s.channel_name || "-"}</td>
+            <td style="font-size:0.8rem;color:var(--text-muted)">${formatTimeAgo(s.last_seen)}</td>
+            <td>
+              <button class="btn btn-blue btn-sm" onclick="promptDirectMessage('${s.hwid}', '${s.label || s.key}')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Üzenet neki
               </button>
-            </div>
-          </td>
-          <td style="color:${k.label ? '#e2e8f0' : 'var(--text-muted)'}">${k.label || "-"}</td>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function formatTimeAgo(ts) {
+      if (!ts) return "-";
+      try {
+        const diffSec = Math.floor((new Date() - new Date(ts)) / 1000);
+        if (diffSec < 10) return "Épp most";
+        if (diffSec < 60) return `${diffSec} mp-e`;
+        const diffMin = Math.floor(diffSec / 60);
+        if (diffMin < 60) return `${diffMin} perce`;
+        return ts.replace("T", " ").split(".")[0];
+      } catch {
+        return ts;
+      }
+    }
+
+    /* ─── MESSAGING ─── */
+    async function updateTargetDropdown() {
+      const select = document.getElementById("msgTarget");
+      const sessions = await api("/admin/sessions");
+      
+      let html = '<option value="ALL">📢 Minden Online Felhasználó (Broadcast)</option>';
+      if (sessions && sessions.length > 0) {
+        sessions.forEach(s => {
+          const name = s.label ? `${s.label} (${s.app_type})` : `${s.key} (${s.app_type})`;
+          html += `<option value="${s.hwid}">📱 ${name} - HWID: ${s.hwid.substring(0, 10)}...</option>`;
+        });
+      }
+      select.innerHTML = html;
+    }
+
+    function promptDirectMessage(hwid, label) {
+      switchTab("messages");
+      const select = document.getElementById("msgTarget");
+      let found = false;
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === hwid) {
+          select.selectedIndex = i;
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        const opt = document.createElement("option");
+        opt.value = hwid;
+        opt.textContent = `📱 ${label} - HWID: ${hwid.substring(0, 10)}...`;
+        select.appendChild(opt);
+        select.value = hwid;
+      }
+      document.getElementById("msgBody").focus();
+    }
+
+    async function sendMessage() {
+      const target_hwid = document.getElementById("msgTarget").value;
+      const type = document.getElementById("msgType").value;
+      const title = document.getElementById("msgTitle").value.trim();
+      const message = document.getElementById("msgBody").value.trim();
+
+      if (!message) {
+        showToast("Kérlek írj be egy üzenetet!", "error");
+        return;
+      }
+
+      const res = await api("/admin/messages/send", {
+        method: "POST",
+        body: JSON.stringify({ target_hwid, type, title, message })
+      });
+
+      if (res) {
+        document.getElementById("msgBody").value = "";
+        showToast("Üzenet sikeresen elküldve a kliens(ek)nek!", "success");
+        loadMessages();
+      }
+    }
+
+    async function loadMessages() {
+      const list = await api("/admin/messages");
+      if (!list) return;
+
+      const tbody = document.getElementById("messagesBody");
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <div>Még nem küldtél üzenetet az alkalmazásokba.</div>
+        </td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(m => {
+        let deliveredCount = 0;
+        try { deliveredCount = JSON.parse(m.delivered_to || "[]").length; } catch (_) {}
+
+        return `
+          <tr>
+            <td style="font-size:0.8rem;color:var(--text-muted)">${formatDate(m.created_at)}</td>
+            <td><span class="pill pill-active" style="font-size:0.72rem">${m.target_hwid === 'ALL' ? 'Mindenki' : m.target_hwid.substring(0, 10) + '...'}</span></td>
+            <td><span style="font-weight:600;font-size:0.78rem">${m.type === 'dialog' ? 'Felugró (Dialog)' : 'Toast sáv'}</span></td>
+            <td style="font-weight:600">${m.title || "-"}</td>
+            <td style="color:#e2e8f0">${m.message}</td>
+            <td><span style="color:var(--green);font-weight:700">${deliveredCount} készülék</span></td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="deleteMessage(${m.id})">Törlés</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function deleteMessage(id) {
+      if (!confirm("Biztosan törlöd ezt az üzenetet?")) return;
+      const res = await api("/admin/messages/delete", {
+        method: "POST",
+        body: JSON.stringify({ id })
+      });
+      if (res) {
+        showToast("Üzenet törölve!", "success");
+        loadMessages();
+      }
+    }
+
+    /* ─── KEYS ─── */
+    async function loadKeys() {
+      const keys = await api("/admin/keys");
+      if (!keys) return;
+
+      allKeys = keys;
+      updateStats(keys);
+      renderKeys(keys);
+    }
+
+    function updateStats(keys) {
+      document.getElementById("statTotal").textContent = keys.length;
+      document.getElementById("statActive").textContent = keys.filter(k => k.activated && !k.banned).length;
+      document.getElementById("statBanned").textContent = keys.filter(k => k.banned).length;
+    }
+
+    function filterKeys() {
+      const q = document.getElementById("keySearchInput").value.trim().toLowerCase();
+      if (!q) {
+        renderKeys(allKeys);
+        return;
+      }
+      const filtered = allKeys.filter(k => 
+        (k.key && k.key.toLowerCase().includes(q)) ||
+        (k.label && k.label.toLowerCase().includes(q)) ||
+        (k.hwid && k.hwid.toLowerCase().includes(q))
+      );
+      renderKeys(filtered);
+    }
+
+    function renderKeys(keys) {
+      const tbody = document.getElementById("keysBody");
+      document.getElementById("keysCount").textContent = `${keys.length} licenc listázva`;
+
+      if (keys.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div>Nincs megjeleníthető licenckulcs.</div>
+        </td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = keys.map(k => `
+        <tr>
+          <td><span class="key-cell">${k.key}</span></td>
+          <td><span style="color:#e2e8f0;font-weight:500">${k.label || "-"}</span></td>
           <td>${getStatusPill(k)}</td>
-          <td><span class="hwid-cell">${k.hwid ? k.hwid.substring(0, 12) + "..." : "Nincs hozzárendelve"}</span></td>
+          <td><span class="hwid-cell" title="${k.hwid || ''}">${k.hwid || '<span style="color:var(--text-muted)">Még nincs</span>'}</span></td>
+          <td style="font-weight:600;font-size:0.8rem">${k.duration}</td>
           <td style="font-size:0.82rem;color:var(--text-muted)">${formatDate(k.activated_at)}</td>
           <td style="font-size:0.82rem">${formatExpiry(k.expires_at)}</td>
           <td>
@@ -1218,7 +1548,7 @@
       document.getElementById("keyBanner").style.display = "flex";
 
       copyToClipboard(data.key);
-      showToast(`Új licenc sikeresen létrehozva és vágólapra másolva!`, "success");
+      showToast(`Új licenc létrehozva és vágólapra másolva!`, "success");
       loadKeys();
     }
 
@@ -1233,13 +1563,11 @@
     }
 
     async function resetKey(key) {
-      if (!confirm(`Biztosan feloldod a(z) ${key} kulcshoz kötött eszközt (HWID)? A felhasználó így új telefonon is be tudja majd aktiválni.`)) return;
-      
+      if (!confirm(`Biztosan feloldod a(z) ${key} kulcshoz kötött eszközt (HWID)?`)) return;
       const res = await api("/admin/keys/reset", {
         method: "POST",
         body: JSON.stringify({ key })
       });
-
       if (res) {
         showToast("Eszköz sikeresen leválasztva a kulcsról!", "success");
         loadKeys();
@@ -1247,13 +1575,11 @@
     }
 
     async function revokeKey(key) {
-      if (!confirm(`Biztosan visszavonod a(z) ${key} licenckulcsot? Ezzel azonnal megszűnik a felhasználó hozzáférése.`)) return;
-      
+      if (!confirm(`Biztosan visszavonod a(z) ${key} licenckulcsot?`)) return;
       const res = await api("/admin/keys/revoke", {
         method: "POST",
         body: JSON.stringify({ key })
       });
-
       if (res) {
         showToast("Licenckulcs visszavonva!", "error");
         loadKeys();
@@ -1262,24 +1588,23 @@
 
     async function banHwidDirect(hwid) {
       if (!confirm(`Biztosan le akarod tiltani ezt a készüléket?\nHWID: ${hwid}`)) return;
-
       const res = await api("/admin/ban", {
         method: "POST",
         body: JSON.stringify({ hwid, reason: "Admin felületről közvetlenül tiltva" })
       });
-
       if (res) {
-        showToast("Készülék sikeresen kitiltva!", "error");
+        showToast("Készülék kitiltva!", "error");
         loadKeys();
       }
     }
 
+    /* ─── BANNED HWIDS ─── */
     async function banHwidManual() {
       const hwid = document.getElementById("banHwidInput").value.trim();
       const reason = document.getElementById("banReasonInput").value.trim();
 
       if (!hwid) {
-        showToast("Kérlek adj meg egy érvényes HWID-t!", "error");
+        showToast("Kérlek adj meg egy HWID-t!", "error");
         return;
       }
 
@@ -1328,13 +1653,13 @@
         method: "POST",
         body: JSON.stringify({ hwid })
       });
-
       if (res) {
         showToast("Eszköz tiltása feloldva!", "success");
         loadBanned();
       }
     }
 
+    /* ─── LOGS ─── */
     async function loadLogs() {
       const logs = await api("/admin/logs");
       if (!logs) return;
@@ -1346,7 +1671,8 @@
         EXPIRED: "#f59e0b",
         BANNED: "#ef4444",
         AUTO_BANNED: "#ef4444",
-        HWID_MISMATCH: "#ef4444"
+        HWID_MISMATCH: "#ef4444",
+        message_sent: "#3b82f6"
       };
 
       const labels = {
@@ -1356,7 +1682,8 @@
         EXPIRED: "Lejárt",
         BANNED: "Tiltva",
         AUTO_BANNED: "Auto-Tiltva",
-        HWID_MISMATCH: "HWID Eltérés"
+        HWID_MISMATCH: "HWID Eltérés",
+        message_sent: "Üzenet Kiküldve"
       };
 
       const tbody = document.getElementById("logsBody");
@@ -1388,10 +1715,8 @@
     function showToast(msg, type = "info") {
       const toast = document.getElementById("toast");
       const text = document.getElementById("toastMsg");
-
       text.textContent = msg;
       toast.className = `show ${type}`;
-
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => {
         toast.className = "";
